@@ -1,11 +1,10 @@
 #  Object Files
-*.OBJ
+*.obj
+*.ffi
 
 # List Files
-*.LST
+*.lst
 
-# Map files
-*.MAP
-
-# Executable files
-*.EXE
+# vim/kate/nano backup files
+*.swp
+*.~
