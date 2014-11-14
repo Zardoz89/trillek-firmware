@@ -16,4 +16,25 @@ Firmware for the Trillek computer v0.1.0
 - [ ] Implement a way to allow the user to setup config data
 - [ ] Implement a machine code monitor (Woz monitor clone), that would run if can't find a media were can boot
 
+## RAM variables
+
+The firmware stores some data on the RAM, using the first few KiB of ram for this. The map it's :
+
+ * 0x0000 - 0x03FF : Interrupt vector table : 256 entries of double words
+ * 0x0400 : TOP_RAM_ADDR (dw) : Highest valid RAM address, and the size of the RAM
+ * 0x : TOTAL_DEVICES (db) : Number of connected devices
+ * 0x : PRIMARY_GRPH : Entry of Devices table that is the primary graphics card
+ * 0x : PRIMARY_KEYB : Entry of Devices table that is the primary keyboard
+ * 0x : DEVICES_TABLE : TOTAL_DEVICES entries of words (see Devices table)
+
+
+## Devices table
+
+The firmware fills a variable lenght table with info about the plugged devices. The table is sorted by device slot. Each entry consists of :
+ 
+ * dev_slot (byte) : Slot were is the device
+ * dev_type (byte) : Device type, that allow to a more fast search for speficic device types
+  
+The max expected size of the table is 256 * 2 = 512 bytes 
+
 
