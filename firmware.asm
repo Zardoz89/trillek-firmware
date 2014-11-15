@@ -5,10 +5,14 @@
 ;
 ; ------------------------------------------------------------------------------
 
+.include "constants.asm"
 .include "ram_vars.asm"
 
 ; Firmware entrypoint and initial quickcheck of RAM
 .include "init.asm"
+
+; Code that counts how many devices are, and fills the device table
+.include "dev_count.asm"
 
 CRASH:      ; If something goes very wrong, here is crash point
   SLEEP
