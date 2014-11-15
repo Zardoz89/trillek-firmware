@@ -10,13 +10,26 @@
 
 ; Firmware entrypoint and initial quickcheck of RAM
 .include "init.asm"
+    MOV %r0, 0
+    STOREB FIRM_INITIATED, %r0
 
 ; Code that counts how many devices are, and fills the device table
 .include "dev_count.asm"
 
+; Gets primary graphics card and initialize it
+.include "graph_init.asm"
+
+    MOV %r0, 0xFF
+    STOREB FIRM_INITIATED, %r0 ; We are initiated all basic stuff
+; TODO Remove this
+    JMP CRASH
+
+; Auxiliar subrutines
+.include "aux_functions.asm"
+
 CRASH:      ; If something goes very wrong, here is crash point
-  SLEEP
-  JMP CRASH ; If wakeups, try again to sleep
+    SLEEP
+    JMP CRASH ; If wakeups, try again to sleep
 
 FIRMWARE_VERSION:
     .db 0   ; Revision

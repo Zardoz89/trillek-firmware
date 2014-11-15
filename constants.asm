@@ -34,4 +34,7 @@ DEV_TYPE_HID      .EQU 0x03       ; Human interface device (keyb/joytsticks)
 DEV_TYPE_GRPH     .EQU 0x0E       ; Graphics cards
 DEV_TYPE_MSTORAGE .EQU 0x08       ; Masive Storage
 
+; TDA constants
+TDA_TEXTBUFF_SIZE .EQU 0x960      ; TDA text buffer size
+
 

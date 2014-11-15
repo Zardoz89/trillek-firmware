@@ -17,11 +17,11 @@ HWM_DO_LOOP:
     IFCLEAR %r2, 0x00FF             ; If there isn't a device ...
       JMP HWM_WHILE_LOOP            ; Skips to the next iteration
 
-    ADD %r0, %r0, 1                 ; Increase the count of devices
     AND %r2, %r2, 0xFF00            ; Cleats present mark
     OR  %r2, %r2, %r1               ; Puts device slot
-    LLS %r3, %r1, 1                 ; We write words. So we do x2
+    LLS %r3, %r0, 1                 ; We write words. So we do x2
     STOREW %r3, DEVICES_TABLE, %r2  ; Puts on table the device slot
+    ADD %r0, %r0, 1                 ; Increase the count of devices
 
 HWM_WHILE_LOOP:                     ; while (++i < 32)
     ADD %r1, %r1, 1
