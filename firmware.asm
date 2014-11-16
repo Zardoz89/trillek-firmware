@@ -27,6 +27,10 @@
 ; Auxiliar subrutines
 .include "aux_functions.asm"
 
+; Text buffer subrutines
+.include "text_buffer.asm"
+
+
 CRASH:      ; If something goes very wrong, here is crash point
     SLEEP
     JMP CRASH ; If wakeups, try again to sleep
