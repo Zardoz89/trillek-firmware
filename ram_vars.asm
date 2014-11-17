@@ -28,7 +28,7 @@ DEVICES_TABLE:    .EQU 0x800  ; Total_Devices * 2 (2048) Device table were each
 
 CURSOR_COL:       .EQU 0x9FE  ; Cursor column
 CURSOR_ROW:       .EQU 0x9FF  ; Cursor row
-SCREEN_BUFF:      .EQU 0xA00  ; Were begins the screen buffer used by the 
+SCREEN_BUFF:      .EQU 0xA00  ; Were begins the screen buffer used by the
                               ; firmware (2560)
 
 

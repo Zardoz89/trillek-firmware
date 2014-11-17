@@ -36,7 +36,7 @@ QRC_DOLOOP2:
 
     ; TODO Do a fine check of the last RAM_STEP bytes
 
-    SUB %r1, %r1, RAM_STEP  ; %r1 points now to the hights valid ram address
+    ;SUB %r1, %r1, RAM_STEP  ; %r1 points now to the hights valid ram address
     STORE TOP_RAM_ADDR, %r1 ; Store on ram were is the top valid address
     MOV %sp, %r1          ; Setstack at the highest valid ram address
     JMP RAM_OK
