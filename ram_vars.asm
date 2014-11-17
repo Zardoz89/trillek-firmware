@@ -23,9 +23,13 @@ DEVICES_TABLE:    .EQU 0x800  ; Total_Devices * 2 (2048) Device table were each
                               ; entry have this format :
                               ;   dev_slot : 1b Device slot
                               ;   dev_type : 1b Device type
+                              ; Max size = 32 * 2 = 64 bytes
+                              ; But we reserve 223 * 2 = 446 bytes
 
-SCREEN_BUFF:      .EQU 0xC00  ; Were begins the screen buffer used by the 
-                              ; firmware (3072)
+CURSOR_COL:       .EQU 0x9FE  ; Cursor column
+CURSOR_ROW:       .EQU 0x9FF  ; Cursor row
+SCREEN_BUFF:      .EQU 0xA00  ; Were begins the screen buffer used by the 
+                              ; firmware (2560)
 
 
 ; TODO Other vars..

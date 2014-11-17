@@ -21,6 +21,11 @@
 
     MOV %r0, 0xFF
     STOREB FIRM_INITIATED, %r0 ; We are initiated all basic stuff
+
+    MOV %r0, STR_LOAD
+    MOV %r1, 32
+    CALL PUTS
+
 ; TODO Remove this
     JMP CRASH
 
@@ -39,3 +44,6 @@ FIRMWARE_VERSION:
     .db 0   ; Revision
     .db 1   ; Minor
     .db 0   ; Major
+
+STR_LOAD:
+    .db "Computer initiated",0

@@ -58,9 +58,8 @@ INIT_PRIMARY_GRAPH:
     MOV %r2, 600                    ; TDA text buffer size
     CALL DW_MEMSET
 
-; TODO REMOVE THIS small check
-    MOV %r1, '$'
-    STOREB SCREEN_BUFF, %r1 ; Puts a $
+    MOV %r0, 0
+    STOREW CURSOR_COL, %r0          ; Sets cursor at 0,0
 
 END_INIT_PRIMARY_GRAPH:
 
