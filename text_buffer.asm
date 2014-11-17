@@ -52,3 +52,32 @@ PUTC_END:
     STOREB CURSOR_ROW, %r4  ; row
     RET
 
+
+; Prints an unsigned double word
+;   %r0 unsigned double word with the value
+; Pollutes %r1, %r2, %r3, %r4, %r5, %r6, %y and %flags
+PUT_UDEC:
+  MOV %r1, 0
+
+PUT_UDEC_DOLOOP:
+  DIV %r0, %r0, 10
+  ADD %r2, %y, '0'          ; Convert the rest to a character
+  PUSH %r2                  ; We must use the stack to reverse the order
+  ADD %r1, %r1, 1           ; %r1 contains the number of characters pushed
+  IFG %r0, 0                ; while %r0 / 10 > 0
+    JMP PUT_UDEC_DOLOOP
+
+PUT_UDEC_WHILELOOP:
+  IFL %r1, 1                ; while (%r1 >= 1)
+    JMP PUT_UDEC_END
+
+  POP %r2                   ; Grabs the character
+  SUB %r1, %r1, 1
+
+  CALL PUTC                 ; Print it
+  JMP PUT_UDEC_WHILELOOP
+
+PUT_UDEC_END:
+  RET
+
+
