@@ -13,12 +13,14 @@ Firmware for the Trillek computer v0.1.0
   - [x] Gets a primary screen as the device with lowest slot
   - [x] Config it
   - [x] Clear screen
-- [ ] Initialize Keyboard
 - [ ] Print boot info on screen
   - [X] Total RAM detected
   - [ ] Primary graphic card being used
   - [ ] Primary keyboard being used
   - [ ] Floppy drives detected
+- [ ] Configure interrupt handler
+  - [ ] Keyboard handler
+  - [ ] Floppy driver handler
 - [ ] Try to bootup from floppy
 - [ ] Store/Read config data from NVRAM like bootup device preferences, main keayboard, main monitor, etc...
 - [ ] Implement a way to allow the user to setup config data
