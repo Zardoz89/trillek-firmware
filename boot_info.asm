@@ -57,4 +57,43 @@
     LOADB %r0, PRIMARY_KEYB     ; Print slot of the graphic card
     CALL PUT_UDEC
 
+    ; Print Floppy list
+    LOADW %r0, CURSOR_COL
+    ADD %r0, %r0, 0x0100
+    AND %r0, %r0, 0xFF00        ; Jumps to the next row
+    STOREW CURSOR_COL, %r0
+
+    MOV %r0, STR_FLOPPY_LIST
+    MOV %r1, 27
+    CALL PUTS
+
+    MOV %r10, 0                     ; r10 as index
+INFO_FLOPPY_FOR:
+
+    LLS %r0, %r10, 1                ; x2
+    LOADW %r1, %r0, DEVICES_TABLE
+    LRS %r2, %r1, 8                 ; Pick only Dev Type
+    IFNEQ %r2, DEV_TYPE_MSTORAGE
+      JMP INFO_FLOPPY_FOR_NEXT      ; Skips to the next iteration
+
+    AND %r1, %r1, 0xFF              ; Pick only Slot
+    LLS %r2, %r1, 8
+    ADD %r2, %r2, 2                 ; Dev. subtype offset
+    LOADB %r2, %r2, BASE_ENUM_CTROL ; Reads subtype
+    IFNEQ %r2, 0x01                 ; If not is a 5.25 Floppy drive
+      JMP INFO_FLOPPY_FOR_NEXT      ; Skips to the next iteration
+
+    MOV %r0, %r1
+    CALL PUT_UDEC                   ; Print slot of the floppy drive
+
+    MOV %r2, ','
+    CALL PUTC
+    MOV %r2, ' '
+    CALL PUTC
+
+INFO_FLOPPY_FOR_NEXT:
+    ADD %r10, %r10, 1
+    IFL %r10, 32
+      JMP INFO_FLOPPY_FOR           ; for (%r10=0; %r10 < 32; %r10++)
+
 SKIP_PRINT:
