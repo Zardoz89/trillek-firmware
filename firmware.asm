@@ -19,21 +19,14 @@
 ; Gets primary graphics card and initialize it
 .include "graph_init.asm"
 
+; Get the first keyboard as primary
+.include "keyb_init.asm"
+
+; Print status to the screen
+.include "boot_info.asm"
+
     MOV %r0, 0xFF
     STOREB FIRM_INITIATED, %r0  ; We are initiated all basic stuff
-
-    MOV %r0, STR_RAM_OK
-    MOV %r1, 18
-    CALL PUTS
-
-    LOAD %r0, TOP_RAM_ADDR
-    LRS %r0, %r0, 10            ; Divide by 1024
-    CALL PUT_UDEC
-
-    MOV %r0, STR_RAM_BYTES
-    MOV %r1, 4
-    CALL PUTS
-
 
 ; TODO Remove this
     JMP CRASH
@@ -58,3 +51,9 @@ STR_RAM_OK:
     .db "RAM OK. Detected ",0
 STR_RAM_BYTES:
     .db " KiB",0
+STR_DEVICES:
+    .db " devices detected",0
+STR_GRAPH_CARD_AT:
+    .db "  Graphics card at slot : ",0
+STR_KEYBOARD_CARD_AT:
+    .db "  Keyboard at slot : ",0

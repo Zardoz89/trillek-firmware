@@ -15,10 +15,10 @@ Firmware for the Trillek computer v0.1.0
   - [x] Clear screen
 - [ ] Print boot info on screen
   - [X] Total RAM detected
-  - [ ] Primary graphic card being used
-  - [ ] Primary keyboard being used
+  - [X] Primary graphic card being used
+  - [X] Primary keyboard being used
   - [ ] Floppy drives detected
-- [ ] Configure interrupt handler
+- [ ] Configure interrupt handler ?
   - [ ] Keyboard handler
   - [ ] Floppy driver handler
 - [ ] Try to bootup from floppy
