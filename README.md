@@ -52,6 +52,16 @@ The firmware fills a variable lenght table with info about the plugged devices. 
 
 The max expected size of the table is 32 * 2 = 64 bytes, but we reserve more space in the case that the specs changes.
 
+## Bootable floppies
+
+The bootup sequence is :
+
+1. See if the floppy drive have a floppy, if not, try with the next floppy drive.
+2. If there is a floppy, reads the first sector and dumps to the adress 0x001400
+3. If the the four last bytes of the sector have the signature 0x30, 0x33, 0x52, 0x54 ("TR32"), assumes that is a bootable media and jumps to the address 0x001400.
+4. If not is a bootable floppy, try with the next floppy drive.
+5. If there isn't any bootable floppy, then launched the machine code monitor.
+
 ## Build it
 
 Actually this firmware uses [Meisaka's WaveAsm](https://github.com/Meisaka/WaveAsm)
