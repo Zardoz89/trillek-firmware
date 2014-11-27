@@ -109,3 +109,8 @@ INFO_FLOPPY_FOR_NEXT:
 
 		STOREB TOTAL_FD, %r9						; Stores how many floppy drives there are
 
+    LOADW %r0, CURSOR_COL
+    ADD %r0, %r0, 0x0100
+    AND %r0, %r0, 0xFF00        ; Jumps to the next row
+    STOREW CURSOR_COL, %r0
+

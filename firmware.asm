@@ -28,6 +28,9 @@
     MOV %r0, 0xFF
     STOREB FIRM_INITIATED, %r0  ; We are initiated all basic stuff
 
+; Try to boot from floppy drives
+.include "fd_boot.asm"
+
 ; TODO Remove this
     JMP CRASH
 
@@ -61,3 +64,7 @@ STR_FLOPPY_LIST:
     .db "  Floppy drives :",0
 STR_FLOPPY_FDX:
     .db " FD",0
+STR_NO_BOOT:
+    .db "Can't boot on any floppy drive",0
+STR_BOOTING:
+    .db "Trying to boot from FD",0

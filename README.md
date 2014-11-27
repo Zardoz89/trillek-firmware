@@ -18,10 +18,7 @@ Firmware for the Trillek computer v0.1.0
   - [X] Primary graphic card being used
   - [X] Primary keyboard being used
   - [X] Floppy drives detected
-- [ ] Configure interrupt handler ?
-  - [ ] Keyboard handler
-  - [ ] Floppy driver handler
-- [ ] Try to bootup from floppy
+- [X] Try to bootup from floppy
 - [ ] Store/Read config data from NVRAM like bootup device preferences, main keayboard, main monitor, etc...
 - [ ] Implement a way to allow the user to setup config data
 - [ ] Implement a machine code monitor (Woz monitor clone), that would run if can't find a bootable media
@@ -65,6 +62,9 @@ The bootup sequence is :
 3. If the the four last bytes of the sector have the signature 0x30, 0x33, 0x52, 0x54 ("TR32"), assumes that is a bootable media and jumps to the address 0x001400.
 4. If not is a bootable floppy, try with the next floppy drive.
 5. If there isn't any bootable floppy, then launched the machine code monitor.
+
+When the firmware calls the boot code placed on address 0x001400, %r9 is set to
+number of floppy drive from was read the boot sector.
 
 ## Build it
 
