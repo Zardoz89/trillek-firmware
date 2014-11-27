@@ -67,33 +67,45 @@
     MOV %r1, 27
     CALL PUTS
 
-    MOV %r10, 0                     ; r10 as index
+SKIP_PRINT:
+    MOV %r10, 0                     ; r10 as list index
+    MOV %r9, 0											; r9 to count floppy unit
 INFO_FLOPPY_FOR:
 
-    LLS %r0, %r10, 1                ; x2
-    LOADW %r1, %r0, DEVICES_TABLE
-    LRS %r2, %r1, 8                 ; Pick only Dev Type
-    IFNEQ %r2, DEV_TYPE_MSTORAGE
-      JMP INFO_FLOPPY_FOR_NEXT      ; Skips to the next iteration
+    LOADB %r1, %r10, DEVICES_TABLE
 
-    AND %r1, %r1, 0xFF              ; Pick only Slot
     LLS %r2, %r1, 8
-    ADD %r2, %r2, 2                 ; Dev. subtype offset
-    LOADB %r2, %r2, BASE_ENUM_CTROL ; Reads subtype
-    IFNEQ %r2, 0x01                 ; If not is a 5.25 Floppy drive
+    ADD %r2, %r2, BASE_ENUM_CTROL   ; %r2 points to device registers
+
+		LOADB %r3, %r2, 1								; Reads type
+    IFNEQ %r3, DEV_TYPE_MSTORAGE
       JMP INFO_FLOPPY_FOR_NEXT      ; Skips to the next iteration
 
-    MOV %r0, %r1
+		LOADB %r3, %r2, 2								; Reads subtype
+    IFNEQ %r3, 0x01                 ; If not is a 5.25 Floppy drive
+      JMP INFO_FLOPPY_FOR_NEXT      ; Skips to the next iteration
+
+		PUSH %r0
+		PUSH %r1
+    MOV %r0, STR_FLOPPY_FDX
+    MOV %r1, 3
+    CALL PUTS												; Print "FD"
+		POP %r1
+		POP %r0
+
+		MOV %r0, %r9
     CALL PUT_UDEC                   ; Print slot of the floppy drive
 
-    MOV %r2, ','
-    CALL PUTC
     MOV %r2, ' '
     CALL PUTC
 
+		ADD %r9, %r9, 1									; How many floppy units there is ?
+
 INFO_FLOPPY_FOR_NEXT:
     ADD %r10, %r10, 1
-    IFL %r10, 32
-      JMP INFO_FLOPPY_FOR           ; for (%r10=0; %r10 < 32; %r10++)
+		LOADB %r8, TOTAL_DEVICES				; How many items ?
+    IFL %r10, %r8
+      JMP INFO_FLOPPY_FOR           ; for (%r10=0; %r10 < total_devices; %r10++)
 
-SKIP_PRINT:
+		STOREB TOTAL_FD, %r9						; Stores how many floppy drives there are
+

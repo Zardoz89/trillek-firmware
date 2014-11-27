@@ -1,7 +1,7 @@
 ; ------------------------------------------------------------------------------
 ;
 ; File : dev_count.asm
-; Counts how many devices are, and fills devices table
+; Counts how many devices are, and fills device list
 ;
 ; Uses %r0, %r1, %r2, %r3
 ;
@@ -13,14 +13,11 @@ HWN_BEGIN:
 
 HWM_DO_LOOP:
     LLS %r3, %r1, 8                 ; 0xXX00
-    LOADW %r2, %r3, BASE_ENUM_CTROL ; Read from 0x11XX00
-    IFCLEAR %r2, 0x00FF             ; If there isn't a device ...
+    LOADB %r2, %r3, BASE_ENUM_CTROL ; Read from 0x11XX00
+    IFNEQ %r2, 0xFF									; If there isn't a device ...
       JMP HWM_WHILE_LOOP            ; Skips to the next iteration
 
-    AND %r2, %r2, 0xFF00            ; Cleats present mark
-    OR  %r2, %r2, %r1               ; Puts device slot
-    LLS %r3, %r0, 1                 ; We write words. So we do x2
-    STOREW %r3, DEVICES_TABLE, %r2  ; Puts on table the device slot
+    STOREB %r0, DEVICES_TABLE, %r1  ; Puts on the list, the device slot
     ADD %r0, %r0, 1                 ; Increase the count of devices
 
 HWM_WHILE_LOOP:                     ; while (++i < 32)

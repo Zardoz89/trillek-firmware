@@ -35,24 +35,28 @@ The firmware stores some data on the RAM, using the first few KiB of ram for thi
 
  * 0x0000 - 0x03FF : Interrupt vector table : 256 entries of double words
  * 0x0400 : TOP_RAM_ADDR (dw) : Highest valid RAM address, and the size of the RAM
- * 0x07FF : TOTAL_DEVICES (db) : Number of connected devices
- * 0x0800 : PRIMARY_GRPH : Slot of the primary graphics card
- * 0x07FD : PRIMARY_KEYB : Slot of the primary keyboard
- * 0x07FE : DEVICES_TABLE : TOTAL_DEVICES entries of words (see Devices table)
- * 0x09FE : CURSOR_COL : Column at were the screen cursor is placed
- * 0x09FF : CURSOR_ROW : Row at were the screen cursor is placed
- * 0x0A00 : SCREEN_BUFF : Text buffer used by graphics card
+ * 0x04FF : TOTAL_DEVICES (b) : Number of connected devices
+ * 0x04FC : TOTAL_FD (b) : Number of floppy drives
+ * 0x04FE : PRIMARY_GRAPH (b) : Slot of the primary graphics card
+ * 0x04FD : PRIMARY_KEYB (b) : Slot of the primary keyboard
+ * 0x0500 : DEVICES_TABLE : TOTAL_DEVICES entries of bytes (see Devices list)
+ * 0x0408 : CURSOR_COL (b) : Column at were the screen cursor is placed
+ * 0x0409 : CURSOR_ROW (b) : Row at were the screen cursor is placed
+ * 0x0600 : SCREEN_BUFF : Text buffer used by graphics card
 
-## Devices table
+## Devices list
 
-The firmware fills a variable lenght table with info about the plugged devices. The table is sorted by device slot. Each entry consists of :
+The firmware fills a variable lenght list that contains the slots with a device
+plugged on it. The table is sorted by device slot. Each entry takes a byte.
+The max expected size of the table is 32 entries (32 bytes), but we reserve more
+space in the case that the specs changes, that is for 220 entries (220 bytes).
 
- * dev_slot (byte) : Slot were is the device
- * dev_type (byte) : Device type, that allow to a more fast search for speficic device types
+## Floppy drives
 
-The max expected size of the table is 32 * 2 = 64 bytes, but we reserve more space in the case that the specs changes.
+Each floppy drive, beging to count from the lowest slot, gets a name like FDx.
+So, the first floppy drive is FD0, the second is FD1, etc...
 
-## Bootable floppies
+### Bootable floppies
 
 The bootup sequence is :
 

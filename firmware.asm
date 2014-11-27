@@ -58,4 +58,6 @@ STR_GRAPH_CARD_AT:
 STR_KEYBOARD_CARD_AT:
     .db "  Keyboard at slot : ",0
 STR_FLOPPY_LIST:
-    .db "  Floppy drives at slots : ",0
+    .db "  Floppy drives :",0
+STR_FLOPPY_FDX:
+    .db " FD",0
