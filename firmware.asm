@@ -31,19 +31,19 @@
 ; Try to boot from floppy drives
 .include "fd_boot.asm"
 
-; TODO Remove this
-    JMP CRASH
+; Fallback to the machine code monitor
+.include "cmonitor.asm"
+
+; Never should reach this
+CRASH:        ; If something goes very wrong, here is crash point
+    SLEEP
+    JMP CRASH ; If wakeups, try again to sleep
 
 ; Auxiliar subrutines
 .include "aux_functions.asm"
 
 ; Text buffer subrutines
 .include "text_buffer.asm"
-
-
-CRASH:      ; If something goes very wrong, here is crash point
-    SLEEP
-    JMP CRASH ; If wakeups, try again to sleep
 
 FIRMWARE_VERSION:
     .db 0   ; Revision

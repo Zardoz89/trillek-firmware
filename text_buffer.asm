@@ -31,6 +31,13 @@ PUTS_END:
 ;   %r2 char to put on it
 ; Pollutes %r3, %r4, %r5, %r6 and %flags
 PUTC:
+    IFEQ %r2, 0x0A          ; If is \n
+      JMP PUTC_NEXT_LINE
+    IFEQ %r2, 0x0D          ; If is \r
+      JMP PUTC_NEXT_LINE
+    IFEQ %r2, 0x08          ; If is backspace
+      JMP PUTC_DELETE
+
     ; Gets cursor and calcs offset
     LOADB %r5, CURSOR_COL   ; Grabs column
     LLS %r3, %r5, 1         ; Col x2, as we use a word for a attribute/char pair
@@ -46,6 +53,26 @@ PUTC:
       JMP PUTC_END
     MOV %r5, 0
     ADD %r4, %r4, 1         ; Increase row
+
+    JMP PUTC_END
+
+PUTC_DELETE:
+    LOADB %r5, CURSOR_COL   ; Grabs column
+    LOADB %r4, CURSOR_ROW   ; Grab row
+    SUB %r5, %r5, 1
+    IFCLEAR %flags, 2        ; If NOT overflows
+      JMP PUTC_END
+    MOV %r5, 0
+    SUB %r4, %r4, 1
+    IFBITS %flags, 2        ; If NOT overflows
+      MOV %r4, 0
+
+    JMP PUTC_END
+
+PUTC_NEXT_LINE:
+    LOADB %r4, CURSOR_ROW   ; Grabs row
+    ADD %r4, %r4, 1
+    MOV %r5, 0              ; Column 0
 
 PUTC_END:
     STOREB CURSOR_COL, %r5  ; Writes to ram the new cursor position

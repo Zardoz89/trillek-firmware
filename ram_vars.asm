@@ -31,6 +31,10 @@ CURSOR_ROW:       .EQU 0x409  ; Cursor row    (b 1033)
 SCREEN_BUFF:      .EQU 0x600  ; Were begins the screen buffer used by the
                               ; firmware (1536), ends at 0xF60 (3936)
 
+; Monitor vars
+MKEYB_ADDR:       .EQU 0x1000 ; (dw) Keyboard base address
+MBUFFER_COUNT:    .EQU 0x1004 ; (b) Buffer size
+MBUFFER:          .EQU 0x1005 ; (max 255) Buffer size
 
 ; TODO Other vars..
 
