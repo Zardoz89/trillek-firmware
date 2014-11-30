@@ -16,6 +16,9 @@ MONITOR_ENTRY:
     OR %r0, %r0, 0x110000       ; Base address of the keyboard at 0x11XX00
     STORE MKEYB_ADDR , %r0
 
+    MOV %r0, 0
+    STOREB MBUFFER_COUNT, %r0   ; Set buffer counter to 0
+
 MONITOR_PROMT:
     MOV %r2, ']'
     CALL PUTC
@@ -33,19 +36,29 @@ MONITOR_GETCHAR_WAITLOOP:       ; Busy loop to wait a key
     LOADW %r2, %r0, 0x0A        ; Get Key Code
 
 MONITOR_ECHO:
-    CALL PUTC
-
-    ; IFEQ %r2, 0x0A
+    ; IFEQ %r2, 0x0D
     ;   JMP MONITOR_PARSE
-    ; IFEQ %r2, 127
-    ;   JMP MONITOR_DEL
+    IFEQ %r2, 0x08
+      JMP MONITOR_DEL
 
     LOADB %r0, MBUFFER_COUNT    ; Get buffer index
     STOREB %r0, MBUFFER, %r2    ; Put it on the buffer
     ADD %r0, %r0, 1
     STOREB MBUFFER_COUNT, %r0   ; Update buffer index
 
+    CALL PUTC
+
     JMP MONITOR_GETCHAR
 
+MONITOR_DEL:
+    LOADB %r0, MBUFFER_COUNT    ; Get buffer index
+    IFEQ %r0, 0
+      JMP MONITOR_GETCHAR       ; Nothing to delete
 
+    SUB %r0, %r0, 1
+    STOREB MBUFFER_COUNT, %r0   ; Update buffer index
+
+    CALL PUTC
+
+    JMP MONITOR_GETCHAR
 

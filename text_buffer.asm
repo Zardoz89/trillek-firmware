@@ -61,11 +61,18 @@ PUTC_DELETE:
     LOADB %r4, CURSOR_ROW   ; Grab row
     SUB %r5, %r5, 1
     IFCLEAR %flags, 2        ; If NOT overflows
-      JMP PUTC_END
+      JMP PUTC_DELETE_END
     MOV %r5, 0
     SUB %r4, %r4, 1
     IFBITS %flags, 2        ; If NOT overflows
       MOV %r4, 0
+
+PUTC_DELETE_END:
+    LLS %r3, %r5, 1         ; Col x2, as we use a word for a attribute/char pair
+    MUL %r6, %r4, 80        ; 40*2 as an word is a pair attribute + char
+    ADD %r6, %r6, %r3       ; offset = col*2 + row * max_col*2
+    MOV %r3, 0x20
+    STOREB %r6, SCREEN_BUFF, %r3  ; Clean the character cell
 
     JMP PUTC_END
 
