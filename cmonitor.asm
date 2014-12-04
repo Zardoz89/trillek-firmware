@@ -35,12 +35,38 @@ MONITOR_GETCHAR_WAITLOOP:       ; Busy loop to wait a key
 
     LOADW %r2, %r0, 0x0A        ; Get Key Code
 
-MONITOR_ECHO:
-    ; IFEQ %r2, 0x0D
+; Process input from %r2, putting on the buffer and displaying it
+MONITOR_PROCESS_INPUT:
+    ; IFEQ %r2, 0x0D              ; Enter key
     ;   JMP MONITOR_PARSE
-    IFEQ %r2, 0x08
+    IFEQ %r2, 0x08              ; Delete
       JMP MONITOR_DEL
 
+    IFGE %r2, 'a'               ; hex
+      IFLE %r2, 'f'
+        JMP MONITOR_PUTBUFFER
+    IFGE %r2, 'A'
+      IFLE %r2, 'F'
+        JMP MONITOR_PUTBUFFER
+    IFGE %r2, '0'
+      IFLE %r2, '9'
+        JMP MONITOR_PUTBUFFER
+
+    IFEQ %r2, ' '               ; Separator
+      JMP MONITOR_PUTBUFFER
+    IFEQ %r2, '.'               ; List block
+      JMP MONITOR_PUTBUFFER
+    IFEQ %r2, ':'               ; Put data
+      JMP MONITOR_PUTBUFFER
+
+    IFEQ %r2, 'r'               ; Run command
+      JMP MONITOR_PUTBUFFER
+    IFEQ %r2, 'R'
+      JMP MONITOR_PUTBUFFER
+
+    JMP MONITOR_GETCHAR_WAITLOOP  ; Unknow, or not an actual command
+
+MONITOR_PUTBUFFER:
     LOADB %r0, MBUFFER_COUNT    ; Get buffer index
     STOREB %r0, MBUFFER, %r2    ; Put it on the buffer
     ADD %r0, %r0, 1
