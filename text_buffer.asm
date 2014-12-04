@@ -53,6 +53,9 @@ PUTC:
       JMP PUTC_END
     MOV %r5, 0
     ADD %r4, %r4, 1         ; Increase row
+    IFL %r4, 30             ; If not wraps row, end
+      JMP PUTC_END
+    MOV %r4, 0
 
     JMP PUTC_END
 
@@ -115,3 +118,46 @@ PUT_UDEC_END:
   RET
 
 
+; Prints an unsigned double word on Hexadecimal
+;   %r0 unsigned byte with the value
+; Pollutes %r0, %r2, %r3, %r4, %r5, %r6 and %flags
+PUT_UHEX:
+  PUSH %r0
+  LRS %r0, %r0, 16          ; High word first
+  CALL PUT_UWHEX
+
+  POP %r0
+  AND %r0, %r0, 0xFFFF      ; Fallback to PUT_UWHEX
+
+; Prints an unsigned word on Hexadecimal
+;   %r0 unsigned byte with the value
+; Pollutes %r0, %r2, %r3, %r4, %r5, %r6 and %flags
+PUT_UWHEX:
+  PUSH %r0
+  LRS %r0, %r0, 8           ; High byte first
+  CALL PUT_UBHEX
+
+  POP %r0
+  AND %r0, %r0, 0xFF        ; Fallback to PUT_UBHEX
+
+; Prints an unsigned byte on Hexadecimal
+;   %r0 unsigned byte with the value
+; Pollutes %r2, %r3, %r4, %r5, %r6 and %flags
+PUT_UBHEX:
+  LRS %r2, %r0, 4           ; High nibble first
+  CALL PUT_HEX
+  AND %r2, %r0, 0x0F        ; Fallback to PUT_HEX
+
+; Prints a single hexadecimal digit
+;   %r2 (lowest nibble) with the hexadecimal digit
+; Pollutes %r2, %r3, %r4, %r5, %r6 and %flags
+PUT_HEX:
+  ADD %r2, %r2, '0'
+  IFLE %r2, '9'
+    JMP PUT_HEX_PUT
+  ADD %r2, %r2, 7           ; %r2 += ('A' - '0')
+
+PUT_HEX_PUT:
+  CALL PUTC
+
+  RET
