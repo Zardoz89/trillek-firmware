@@ -93,7 +93,7 @@ MONITOR_PARSE:
     ; TODO
 
     ; Jumps to the next line
-    MOV %r2, '0x0D'
+    MOV %r2, 0x0A
     CALL PUTC
 
     MOV %r0, 0
