@@ -190,11 +190,41 @@ MONITOR_PARSE_REAL_END:
 ; Stuff to do at the end of parsing when is in block examine mode
 MONITOR_PARSE_END_BEXAM:
     LOAD %r0, LADDRESS
-    IFG %r0, %r7                ; Invalid address, display only LADDRESS
+    IFG %r0, %r7                ; Invalid end address, display only LADDRESS
       JMP MONITOR_PARSE_END_EXAM
 
-    ; TODO list data from LADDRESS to %r7 if LADDRESS is <= %r7
-    CALL MONITOR_PRINT_ADDR   ; Print address
+    CALL MONITOR_PRINT_ADDR     ; Print address
+
+    MOV %r10, 0                 ; %r2 as counter to print regular address
+MONITOR_PARSE_BEXAM_FORLOOP:
+    IFGE %r0, %r7               ; for (;%r0 < %r7; %r0++)
+      JMP MONITOR_PARSE_BEXAM_FOREND
+
+    ; Every 8 values, jump to a new line and print address
+    IFNEQ %r10, 8
+      JMP MONITOR_PARSE_BEXAM_PRINTVAL
+
+    MOV %r10, 0
+    MOV %r2, LF                 ; Jumps to the next line
+    CALL PUTC
+    CALL MONITOR_PRINT_ADDR     ; Print address
+
+MONITOR_PARSE_BEXAM_PRINTVAL:
+    PUSH %r0                    ; PUT_UBHEX takes value on %r0, so we must 
+                                ; preserve it
+    LOADB %r0, %r0              ; Get value at %r0 address and print it
+    CALL PUT_UBHEX
+
+    MOV %r2, ' '                ; Separator between values
+    CALL PUTC
+    POP %r0
+
+MONITOR_PARSE_BEXAM_FORNEXT:
+    ADD %r0, %r0, 1
+    ADD %r10, %r10, 1
+    JMP MONITOR_PARSE_BEXAM_FORLOOP
+
+MONITOR_PARSE_BEXAM_FOREND:
 
     JMP MONITOR_PARSE_REAL_END
 
@@ -258,7 +288,7 @@ MONITOR_VAL_HLLETTER:
 
 ; Subrutine that print and addres on %r0
 MONITOR_PRINT_ADDR:
-    LOAD %r0, LADDRESS          ; Get last address
+    PUSH %r0
     CALL PUT_UHEX
 
     MOV %r2, ADDR_SEP
@@ -266,5 +296,6 @@ MONITOR_PRINT_ADDR:
     MOV %r2, ' '
     CALL PUTC
 
+    POP %r0
     RET
 
