@@ -25,7 +25,7 @@ Firmware for the Trillek computer v0.1.0
   - [x] Examine value at address
   - [x] Examine a range of addresses
   - [ ] Write data to RAM
-  - [ ] Run code at an address (CALL address)
+  - [X] Run code at an address (CALL address)
   - [ ] Use of arrows to manipulate input buffer
 - [ ] Write some auxiliar functions on the firmware but with public access point to allow be reused by software and OS
   - [x] dw_memset : Fill an memory area with a double word value.
@@ -79,7 +79,7 @@ number of floppy drive from was read the boot sector.
 
 ## Machine Code Monitor
 
-The monitor is a clone of Wozniak's code monitor of Apple I and ]\[ . With it is posible to examine RAM values on the fly and input values to the RAM, so could be used like a primitive debugger and as a crude and primitive way of doing low level programing typing machine code. Also, can *Run* code on RAM, doing a CALL to an address. More information about Woz's original machine code monitor (here)[http://www.sbprojects.com/projects/apple1/wozmon.php]
+The monitor is a clone of Wozniak's code monitor of Apple I and ]\[ . With it is posible to examine RAM values on the fly and input values to the RAM, so could be used like a primitive debugger and as a crude and primitive way of doing low level programing typing machine code. Also, can *Run* code on RAM, doing a CALL to an address. More information about Woz's original machine code monitor [here](http://www.sbprojects.com/projects/apple1/wozmon.php)
 
 ## Build it
 
