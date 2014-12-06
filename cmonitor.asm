@@ -170,16 +170,11 @@ MONITOR_PARSE_END:
 
 MONITOR_PARSE_END_EXAM:
     ; Print value at last address always
-    LOAD %r0, LADDRESS          ; Get last address
-    CALL PUT_UHEX
+    LOAD %r0, LADDRESS            ; Get last address
+    CALL MONITOR_PRINT_ADDR       ; Print address
 
-    MOV %r2, ADDR_SEP
-    CALL PUTC
-    MOV %r2, ' '
-    CALL PUTC
-
-    LOAD %r1, LADDRESS          ; Get last address
-    LOADB %r0, %r1              ; Get value
+    LOAD %r1, LADDRESS            ; Get last address
+    LOADB %r0, %r1                ; Get value
     CALL PUT_UBHEX
 
 MONITOR_PARSE_REAL_END:
@@ -199,12 +194,7 @@ MONITOR_PARSE_END_BEXAM:
       JMP MONITOR_PARSE_END_EXAM
 
     ; TODO list data from LADDRESS to %r7 if LADDRESS is <= %r7
-    CALL PUT_UHEX
-
-    MOV %r2, ADDR_SEP
-    CALL PUTC
-    MOV %r2, ' '
-    CALL PUTC
+    CALL MONITOR_PRINT_ADDR   ; Print address
 
     JMP MONITOR_PARSE_REAL_END
 
@@ -229,12 +219,7 @@ MONITOR_NEW_LADDR:
     STORE LADDRESS, %r7
 
     MOV %r0, %r7
-    CALL PUT_UHEX             ; Print address
-
-    MOV %r2, ADDR_SEP
-    CALL PUTC
-    MOV %r2, ' '
-    CALL PUTC
+    CALL MONITOR_PRINT_ADDR   ; Print address
 
     LOADB %r0, %r7            ; Print value
     CALL PUT_UBHEX
@@ -270,4 +255,16 @@ MONITOR_VAL_HLLETTER:
     AND %r0, %r0, 0x0F        ; Sanization
     OR %r7, %r7, %r0
     JMP MONITOR_PARSE_FORNEXT
+
+; Subrutine that print and addres on %r0
+MONITOR_PRINT_ADDR:
+    LOAD %r0, LADDRESS          ; Get last address
+    CALL PUT_UHEX
+
+    MOV %r2, ADDR_SEP
+    CALL PUTC
+    MOV %r2, ' '
+    CALL PUTC
+
+    RET
 
