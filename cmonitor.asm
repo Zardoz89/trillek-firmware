@@ -18,6 +18,8 @@ CR            .equ 0x0D         ; Enter key
 LF            .equ 0x0A         ; \n
 DEL           .equ 0x08         ; Delete key
 
+CURSOR        .equ 0b1111000011101010 ; Configuration of the HW cursor
+
 ; Ram vars
 MKEYB_ADDR:       .EQU 0x1000 ; (dw) Keyboard base address
 LADDRESS:         .EQU 0x1004 ; (dw) Last address pointed
@@ -44,9 +46,14 @@ MONITOR_ENTRY:
     MOV %r0, 0x001400
     STORE LADDRESS, %r0         ; Set last address to 0x001400
 
+    LOAD %r6, HW_CURSOR_ADDR    ; Enables blinking HW cursor
+    MOV %r0, CURSOR
+    STOREW %r6, -2, %r0
+
 MONITOR_PROMPT:
     MOV %r2, PROMPT
     CALL PUTC
+    CALL SYNC_HW_CURSOR
 
 MONITOR_GETCHAR:
     LOAD %r0, MKEYB_ADDR
@@ -98,6 +105,7 @@ MONITOR_PUTBUFFER:
     STOREB MBUFFER_COUNT, %r0   ; Update buffer lenght
 
     CALL PUTC
+    CALL SYNC_HW_CURSOR
 
     JMP MONITOR_GETCHAR
 
@@ -110,6 +118,7 @@ MONITOR_DEL:
     STOREB MBUFFER_COUNT, %r0   ; Update buffer lenght
 
     CALL PUTC
+    CALL SYNC_HW_CURSOR
 
     JMP MONITOR_GETCHAR
 
@@ -253,8 +262,17 @@ MONITOR_PARSE_END_STORE:
 
 ; Execute code pointed at last address
 MONITOR_RUN:
+    LOAD %r6, HW_CURSOR_ADDR    ; Disables blinking HW cursor
+    MOV %r0, 0
+    STOREW %r6, -2, %r0
+
     LOAD %r0, LADDRESS          ; Get last address
     CALL %r0
+
+    LOAD %r6, HW_CURSOR_ADDR    ; Enables blinking HW cursor
+    MOV %r0, CURSOR
+    STOREW %r6, -2, %r0
+
     JMP MONITOR_PARSE_END
 
 ; Changes to Block EXAMine mode

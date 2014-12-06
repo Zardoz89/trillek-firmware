@@ -164,3 +164,20 @@ PUT_HEX_PUT:
   CALL PUTC
 
   RET
+
+; Sets the HW cursor to the text buffer cursor position
+SYNC_HW_CURSOR:
+    PUSH %r5
+    PUSH %r4
+
+    LOADB %r5, CURSOR_COL   ; Grabs column
+    LOADB %r4, CURSOR_ROW   ; Grab row
+    LLS %r4, %r4, 8
+    OR %r5, %r5, %r4
+    LOAD %r6, HW_CURSOR_ADDR
+    STOREw %r6, %r5         ; Sets HW cursor column and row
+
+    POP %r4
+    POP %r5
+    RET
+

@@ -49,6 +49,9 @@ INIT_PRIMARY_GRAPH:
 
     LLS %r0, %r0, 8
     ADD %r0, %r0, BASE_ENUM_CTROL
+    ADD %r1, %r0, 0x12
+    STORE HW_CURSOR_ADDR, %r1       ; Address of were is the HW cursor ctrl (E)
+
     MOV %r1, SCREEN_BUFF
     STORE %r0, 0x0A, %r1            ; Sets the text buffer
     MOV %r1, 0
@@ -60,8 +63,11 @@ INIT_PRIMARY_GRAPH:
     MOV %r2, 600                    ; TDA text buffer size
     CALL DW_MEMSET
 
+; 4) Sets cursor
     MOV %r0, 0
     STOREW CURSOR_COL, %r0          ; Sets cursor at 0,0
+    LOAD %r1, HW_CURSOR_ADDR
+    STOREW %r1, %r0                 ; Sets HW cursor at 0,0
 
 END_INIT_PRIMARY_GRAPH:
 

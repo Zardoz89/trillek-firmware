@@ -28,6 +28,7 @@ DEVICES_TABLE:    .EQU 0x500  ; Device lists were each entry is a byte with
 
 CURSOR_COL:       .EQU 0x408  ; Cursor column (b 1032)
 CURSOR_ROW:       .EQU 0x409  ; Cursor row    (b 1033)
+HW_CURSOR_ADDR:   .EQU 0x40C  ; Address of Hardware cursor position (dw 1036)
 SCREEN_BUFF:      .EQU 0x600  ; Were begins the screen buffer used by the
                               ; firmware (1536), ends at 0xF60 (3936)
 
