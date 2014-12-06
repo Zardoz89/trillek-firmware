@@ -143,7 +143,7 @@ MONITOR_PARSE_FORLOOP:
         JMP MONITOR_NEW_LADDR
 
     IFEQ %r0, '.'
-      JMP MONITOR_PARSE_FORNEXT ; TODO
+      JMP MONITOR_CHMODE_BEXAM  ; Changes to block examine mode
 
     IFEQ %r0, ':'
       JMP MONITOR_PARSE_FORNEXT ; TODO
@@ -159,10 +159,16 @@ MONITOR_PARSE_FORNEXT:
     ADD %r9, %r9, 1
     JMP MONITOR_PARSE_FORLOOP
 
+; Called when the parser ends of reading the buffer
 MONITOR_PARSE_END:
     IFEQ %r8, MODE_EXAM
-      STORE LADDRESS, %r7       ; Updates last address
+      IFNEQ %r9, 0                ; If not was introduced a value, preserves it
+        STORE LADDRESS, %r7       ; Updates last address
 
+    IFEQ %r8, MODE_BEXAM          ; Block examine mode
+      JMP MONITOR_PARSE_END_BEXAM
+
+MONITOR_PARSE_END_EXAM:
     ; Print value at last address always
     LOAD %r0, LADDRESS          ; Get last address
     CALL PUT_UHEX
@@ -176,6 +182,7 @@ MONITOR_PARSE_END:
     LOADB %r0, %r1              ; Get value
     CALL PUT_UBHEX
 
+MONITOR_PARSE_REAL_END:
     ; Jumps to the next line
     MOV %r2, LF
     CALL PUTC
@@ -185,11 +192,37 @@ MONITOR_PARSE_END:
 
     JMP MONITOR_PROMPT
 
+; Stuff to do at the end of parsing when is in block examine mode
+MONITOR_PARSE_END_BEXAM:
+    LOAD %r0, LADDRESS
+    IFG %r0, %r7                ; Invalid address, display only LADDRESS
+      JMP MONITOR_PARSE_END_EXAM
+
+    ; TODO list data from LADDRESS to %r7 if LADDRESS is <= %r7
+    CALL PUT_UHEX
+
+    MOV %r2, ADDR_SEP
+    CALL PUTC
+    MOV %r2, ' '
+    CALL PUTC
+
+    JMP MONITOR_PARSE_REAL_END
+
 ; Execute code pointed at last address
 MONITOR_RUN:
     LOAD %r0, LADDRESS          ; Get last address
     CALL %r0
     JMP MONITOR_PARSE_END
+
+; Changes to Block EXAMine mode
+MONITOR_CHMODE_BEXAM:
+    IFNEQ %r9, 0                ; If not was introduced a value, preserves it
+      STORE LADDRESS, %r7
+
+    MOV %r8, MODE_BEXAM
+    MOV %r7, 0                  ; Resets temporal value
+
+    JMP MONITOR_PARSE_FORNEXT
 
 ; Changes last address and print it
 MONITOR_NEW_LADDR:
