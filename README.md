@@ -18,13 +18,24 @@ Firmware for the Trillek computer v0.1.0
   - [X] Primary graphic card being used
   - [X] Primary keyboard being used
   - [X] Floppy drives detected
-- [X] Try to bootup from floppy
+- [X] Try to bootup from floppy (broken)
 - [ ] Store/Read config data from NVRAM like bootup device preferences, main keayboard, main monitor, etc...
 - [ ] Implement a way to allow the user to setup config data
 - [ ] Implement a machine code monitor (Woz monitor clone), that would run if can't find a bootable media
+  - [x] Examine value at address
+  - [x] Examine a range of addresses
+  - [ ] Write data to RAM
+  - [ ] Run code at an address (CALL address)
+  - [ ] Use of arrows to manipulate input buffer
 - [ ] Write some auxiliar functions on the firmware but with public access point to allow be reused by software and OS
   - [x] dw_memset : Fill an memory area with a double word value.
-  - [x] Basic putc/puts/put_decimal to screen buffer subrutines
+  - [x] Basic putc/puts/put_decimal/put_uhex to screen buffer subrutines
+    - PUTC : Write a character. \n Jumps to the next line
+    - PUTS : Write a ASCIIz string
+    - PUT_UDEC : Write a decimal value
+    - PUT_UHEX : Write a double word value on hexadecimal
+    - PUT_UWHEX : Write a word value on hexadecimal
+    - PUT_UBHEX : Write a byte value on hexadecimal
 
 ## RAM variables
 
@@ -65,6 +76,10 @@ The bootup sequence is :
 
 When the firmware calls the boot code placed on address 0x001400, %r9 is set to
 number of floppy drive from was read the boot sector.
+
+## Machine Code Monitor
+
+The monitor is a clone of Wozniak's code monitor of Apple I and ]\[ . With it is posible to examine RAM values on the fly and input values to the RAM, so could be used like a primitive debugger and as a crude and primitive way of doing low level programing typing machine code. Also, can *Run* code on RAM, doing a CALL to an address. More information about Woz's original machine code monitor (here)[http://www.sbprojects.com/projects/apple1/wozmon.php]
 
 ## Build it
 
