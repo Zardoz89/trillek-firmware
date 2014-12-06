@@ -61,7 +61,7 @@ PUTC_DELETE:
     LOADB %r5, CURSOR_COL   ; Grabs column
     LOADB %r4, CURSOR_ROW   ; Grab row
     SUB %r5, %r5, 1
-    IFCLEAR %flags, 2        ; If NOT overflows
+    IFCLEAR %flags, 2       ; If NOT overflows
       JMP PUTC_DELETE_END
     MOV %r5, 0
     SUB %r4, %r4, 1
@@ -77,18 +77,20 @@ PUTC_DELETE_END:
 
     JMP PUTC_END
 
-PUTC_NEXT_LINE:
-    MOV %r5, 0              ; Column 0
-    LOADB %r4, CURSOR_ROW   ; Grabs row
-    ADD %r4, %r4, 1
-    IFL %r4, 30             ; If not wraps row, end
-      JMP PUTC_END
-    MOV %r4, 0
-
 PUTC_END:
     STOREB CURSOR_COL, %r5  ; Writes to ram the new cursor position
     STOREB CURSOR_ROW, %r4  ; row
     RET
+
+PUTC_NEXT_LINE:
+    MOV %r2, ' '
+    CALL PUTC               ; Recursive call to print a space
+
+    LOADB %r5, CURSOR_COL   ; Grabs column
+    IFEQ %r5, 0             ; Wrapped, so we end
+      RET
+
+    JMP PUTC_NEXT_LINE      ; Loops to fill the line with spaces
 
 
 ; Prints an unsigned double word
