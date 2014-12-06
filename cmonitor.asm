@@ -11,7 +11,7 @@ MODE_EXAM     .equ  0           ; Examine a single byte
 MODE_BEXAM    .equ  1           ; Examine a block
 MODE_STORE    .equ  2           ; Write data
 
-PROMPT        .equ 0x5C         ; \
+PROMPT        .equ '*'
 ADDR_SEP      .equ ':'
 
 CR            .equ 0x0D         ; Enter key
@@ -21,8 +21,9 @@ DEL           .equ 0x08         ; Delete key
 ; Ram vars
 MKEYB_ADDR:       .EQU 0x1000 ; (dw) Keyboard base address
 LADDRESS:         .EQU 0x1004 ; (dw) Last address pointed
-MBUFFER_COUNT:    .EQU 0x1008 ; (b) Buffer size
-MBUFFER:          .EQU 0x1009 ; (max 255) Buffer size
+WRITE_IND:        .EQU 0x1008 ; (b) Write index
+MBUFFER_COUNT:    .EQU 0x1009 ; (b) Buffer size
+MBUFFER:          .EQU 0x100A ; (max 255) Buffer size
 
 ; Code
 
@@ -45,8 +46,6 @@ MONITOR_ENTRY:
 
 MONITOR_PROMPT:
     MOV %r2, PROMPT
-    CALL PUTC
-    MOV %r2, LF
     CALL PUTC
 
 MONITOR_GETCHAR:
@@ -142,18 +141,25 @@ MONITOR_PARSE_FORLOOP:
       IFEQ %r8, MODE_EXAM
         JMP MONITOR_NEW_LADDR
 
+    IFEQ %r0, ' '
+      IFEQ %r8, MODE_STORE
+        JMP MONITOR_WRITEVAL
+
     IFEQ %r0, '.'
-      JMP MONITOR_CHMODE_BEXAM  ; Changes to block examine mode
+      IFEQ %r8, MODE_EXAM        ; Only if is in Examination mode
+        JMP MONITOR_CHMODE_BEXAM  ; Changes to block examine mode
 
     IFEQ %r0, ':'
-      JMP MONITOR_PARSE_FORNEXT ; TODO
+      IFEQ %r8, MODE_EXAM        ; Only if is in Examination mode
+        JMP MONITOR_CHMODE_STORE  ; Changes to store mode
 
     IFLE %r0, '9'               ; 0 to 9
       JMP MONITOR_VAL_HDIGIT
 
     IFLE %r0, 'F'               ; A to F
       JMP MONITOR_VAL_HULETTER
-    JMP MONITOR_VAL_HLLETTER    ; a to f
+    IFLE %r0, 'f'               ; a to f
+      JMP MONITOR_VAL_HLLETTER
 
 MONITOR_PARSE_FORNEXT:
     ADD %r9, %r9, 1
@@ -167,6 +173,9 @@ MONITOR_PARSE_END:
 
     IFEQ %r8, MODE_BEXAM          ; Block examine mode
       JMP MONITOR_PARSE_END_BEXAM
+
+    IFEQ %r8, MODE_STORE          ; Store mode
+      JMP MONITOR_PARSE_END_STORE
 
 MONITOR_PARSE_END_EXAM:
     ; Print value at last address always
@@ -210,7 +219,7 @@ MONITOR_PARSE_BEXAM_FORLOOP:
     CALL MONITOR_PRINT_ADDR     ; Print address
 
 MONITOR_PARSE_BEXAM_PRINTVAL:
-    PUSH %r0                    ; PUT_UBHEX takes value on %r0, so we must 
+    PUSH %r0                    ; PUT_UBHEX takes value on %r0, so we must
                                 ; preserve it
     LOADB %r0, %r0              ; Get value at %r0 address and print it
     CALL PUT_UBHEX
@@ -225,6 +234,20 @@ MONITOR_PARSE_BEXAM_FORNEXT:
     JMP MONITOR_PARSE_BEXAM_FORLOOP
 
 MONITOR_PARSE_BEXAM_FOREND:
+
+    JMP MONITOR_PARSE_REAL_END
+
+; Stuff to do at the end of parsing when is on store mode
+MONITOR_PARSE_END_STORE:
+    IFEQ %r0, ' '
+      JMP MONITOR_PARSE_REAL_END  ; We wrote the last value
+
+    LOAD %r0, LADDRESS
+    LOADB %r1, WRITE_IND
+    STOREB %r0, %r1, %r7      ; Writes on %r0 + WRITE_IND
+
+    ADD %r1, %r1, 1
+    STOREB WRITE_IND, %r1     ; And increases WRITE_IND
 
     JMP MONITOR_PARSE_REAL_END
 
@@ -244,6 +267,17 @@ MONITOR_CHMODE_BEXAM:
 
     JMP MONITOR_PARSE_FORNEXT
 
+; Changes to STORE mode
+MONITOR_CHMODE_STORE:
+    IFNEQ %r9, 0                ; If not was introduced a value, preserves it
+      STORE LADDRESS, %r7
+
+    MOV %r8, MODE_STORE
+    MOV %r7, 0                  ; Resets temporal value
+    STOREB WRITE_IND, %r7       ; Sets write index to 0
+
+    JMP MONITOR_PARSE_FORNEXT
+
 ; Changes last address and print it
 MONITOR_NEW_LADDR:
     STORE LADDRESS, %r7
@@ -257,6 +291,19 @@ MONITOR_NEW_LADDR:
     ; Jumps to the next line
     MOV %r2, LF
     CALL PUTC
+
+    MOV %r7, 0                ; Reset temporal
+
+    JMP MONITOR_PARSE_FORNEXT
+
+; Writes %r7 value on LADDRESS
+MONITOR_WRITEVAL
+    LOAD %r0, LADDRESS
+    LOADB %r1, WRITE_IND
+    STOREB %r0, %r1, %r7      ; Writes on %r0 + WRITE_IND
+
+    ADD %r1, %r1, 1
+    STOREB WRITE_IND, %r1     ; And increases WRITE_IND
 
     MOV %r7, 0                ; Reset temporal
 

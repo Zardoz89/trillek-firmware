@@ -6,7 +6,7 @@ Firmware for the Trillek computer v0.1.0
 ## What does / TODO list
 
 - [x] Quick check of RAM
-- [x] Get avaliable RAM
+- [x] Get available RAM
 - [x] Set Stack
 - [x] Generate a table with installed devices
 - [x] Initialize Screen
@@ -18,16 +18,16 @@ Firmware for the Trillek computer v0.1.0
   - [X] Primary graphic card being used
   - [X] Primary keyboard being used
   - [X] Floppy drives detected
-- [X] Try to bootup from floppy (broken)
-- [ ] Store/Read config data from NVRAM like bootup device preferences, main keayboard, main monitor, etc...
+- [X] Try to boot-up from floppy (broken)
+- [ ] Store/Read config data from NVRAM like boot-up device preferences, main keyboard, main monitor, etc...
 - [ ] Implement a way to allow the user to setup config data
-- [ ] Implement a machine code monitor (Woz monitor clone), that would run if can't find a bootable media
+- [x] Implement a machine code monitor (Woz monitor clone), that would run if can't find a bootable media
   - [x] Examine value at address
   - [x] Examine a range of addresses
-  - [ ] Write data to RAM
+  - [x] Write data to RAM
   - [X] Run code at an address (CALL address)
   - [ ] Use of arrows to manipulate input buffer
-- [ ] Write some auxiliar functions on the firmware but with public access point to allow be reused by software and OS
+- [ ] Write some auxiliary functions on the firmware but with public access point to allow be reused by software and OS
   - [x] dw_memset : Fill an memory area with a double word value.
   - [x] Basic putc/puts/put_decimal/put_uhex to screen buffer subrutines
     - PUTC : Write a character. \n Jumps to the next line
@@ -54,22 +54,22 @@ The firmware stores some data on the RAM, using the first few KiB of ram for thi
 
 ## Devices list
 
-The firmware fills a variable lenght list that contains the slots with a device
+The firmware fills a variable length list that contains the slots with a device
 plugged on it. The table is sorted by device slot. Each entry takes a byte.
 The max expected size of the table is 32 entries (32 bytes), but we reserve more
 space in the case that the specs changes, that is for 220 entries (220 bytes).
 
 ## Floppy drives
 
-Each floppy drive, beging to count from the lowest slot, gets a name like FDx.
+Each floppy drive, begging to count from the lowest slot, gets a name like FDx.
 So, the first floppy drive is FD0, the second is FD1, etc...
 
 ### Bootable floppies
 
-The bootup sequence is :
+The boot-up sequence is :
 
 1. See if the floppy drive have a floppy, if not, try with the next floppy drive.
-2. If there is a floppy, reads the first sector and dumps to the adress 0x001400
+2. If there is a floppy, reads the first sector and dumps to the address 0x001400
 3. If the the four last bytes of the sector have the signature 0x30, 0x33, 0x52, 0x54 ("TR32"), assumes that is a bootable media and jumps to the address 0x001400.
 4. If not is a bootable floppy, try with the next floppy drive.
 5. If there isn't any bootable floppy, then launched the machine code monitor.
@@ -79,7 +79,7 @@ number of floppy drive from was read the boot sector.
 
 ## Machine Code Monitor
 
-The monitor is a clone of Wozniak's code monitor of Apple I and ]\[ . With it is posible to examine RAM values on the fly and input values to the RAM, so could be used like a primitive debugger and as a crude and primitive way of doing low level programing typing machine code. Also, can *Run* code on RAM, doing a CALL to an address. More information about Woz's original machine code monitor [here](http://www.sbprojects.com/projects/apple1/wozmon.php)
+The monitor is a clone of Wozniak's code monitor of Apple I and ]\[ . With it is possible to examine RAM values on the fly and input values to the RAM, so could be used like a primitive debugger and as a crude and primitive way of doing low level programming typing machine code. Also, can *Run* code on RAM, doing a CALL to an address. More information about Woz's original machine code monitor [here](http://www.sbprojects.com/projects/apple1/wozmon.php)
 
 ## Build it
 
