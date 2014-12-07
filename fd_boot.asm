@@ -61,7 +61,7 @@ FD_BOOT_WAIT_READ:
 		MOV %r0, %r9
     CALL PUT_UDEC                   ; Print slot of the floppy drive
 
-		CALL 0x001400										; Boot
+		CALL BOOT_SECTOR_ADDR						;  Boot
 
 FD_BOOT_FOR_CANT_BOOT
 		ADD %r9, %r9, 1

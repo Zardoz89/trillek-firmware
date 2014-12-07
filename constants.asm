@@ -11,7 +11,7 @@ BASE_ENUM_CTROL   .EQU 0x110000   ; Were begins the Hard Enuem&Ctrol regs
 ; Boot up sequence
 BOOT_SECTOR_ADDR  .EQU 0x001400		; Were is dumped sector 0 on RAM
 BOOT_MAGIC_ADDR   .EQU 0x0015FC	  ; Were is the bootable mark
-BOOT_MAGICNUMBER  .EQU 0x54523330	; Bootable mark
+BOOT_MAGICNUMBER  .EQU 0x32335254 ; Bootable mark 'TR32'
 
 ; Embed devices addresses ------------------------------------------------------
 BEEPER_ADDR       .EQU 0x11E020
