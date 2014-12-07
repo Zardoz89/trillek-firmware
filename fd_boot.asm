@@ -35,18 +35,17 @@ FD_BOOT_FOR:
 
 		LOADW %r0, %r2, 0x10						; Read status code
 		IFEQ %r0, 0x0000								; If not media, skips
-			JMP FD_BOOT_FOR_CANT_BOOT
+			JMP FD_BOOT_FOR_NOMEDIA
 
 		; Read sector 0
 		MOV %r0, BOOT_SECTOR_ADDR				; Address were to dump the sector
 		STORE %r2, 0x0A, %r0						; Write to B:A register
+		MOV %r0, 0				              ; Sector 0
+		STOREW %r2, 0x0E, %r0						; Write to C register
 		MOV %r0, 0x00001								; Read Command
 		STOREW %r2, 0x08, %r0
 
 FD_BOOT_WAIT_READ:
-		MOV %r0, 0x0003									; Query media command
-		STOREW %r2, 0x08, %r0
-
 		LOADW %r0, %r2, 0x10						; Read status code
 		IFEQ %r0, 0x0003								; Wait to the end of operation
 			JMP FD_BOOT_WAIT_READ
@@ -55,7 +54,7 @@ FD_BOOT_WAIT_READ:
 		IFNEQ %r0, BOOT_MAGICNUMBER			; Compare agains the magic number
 			JMP FD_BOOT_FOR_CANT_BOOT
 
-		; TODO Print that is booting from FDx
+		; Print that is booting from FDx
     MOV %r0, STR_BOOTING
     MOV %r1, 30
     CALL PUTS												; Print text
@@ -70,6 +69,15 @@ FD_BOOT_FOR_CANT_BOOT
 FD_BOOT_FOR_NEXT:
     ADD %r8, %r8, 1
     JMP FD_BOOT_FOR									; next %r9
+
+FD_BOOT_FOR_NOMEDIA
+		ADD %r9, %r9, 1
+		; Print that there is no media
+    MOV %r0, STR_NO_MEDIA
+    MOV %r1, 30
+    CALL PUTS
+
+    JMP FD_BOOT_FOR_NEXT
 
 FD_BOOT_END:
 		; Print that can't boot from media

@@ -66,5 +66,7 @@ STR_FLOPPY_FDX:
     .db " FD",0
 STR_NO_BOOT:
     .db "Can't boot on any floppy drive",0
+STR_NO_MEDIA:
+    .db "Floppy drive not have a floppy",0
 STR_BOOTING:
     .db "Trying to boot from FD",0
