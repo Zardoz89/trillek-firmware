@@ -18,7 +18,7 @@ Firmware for the Trillek computer v0.1.0
   - [X] Primary graphic card being used
   - [X] Primary keyboard being used
   - [X] Floppy drives detected
-- [X] Try to boot-up from floppy (broken)
+- [X] Try to boot-up from floppy
 - [ ] Store/Read config data from NVRAM like boot-up device preferences, main keyboard, main monitor, etc...
 - [ ] Implement a way to allow the user to setup config data
 - [x] Implement a machine code monitor (Woz monitor clone), that would run if can't find a bootable media
@@ -42,15 +42,17 @@ Firmware for the Trillek computer v0.1.0
 The firmware stores some data on the RAM, using the first few KiB of ram for this. The map it's :
 
  * 0x0000 - 0x03FF : Interrupt vector table : 256 entries of double words
- * 0x0400 : TOP_RAM_ADDR (dw) : Highest valid RAM address, and the size of the RAM
- * 0x04FF : TOTAL_DEVICES (b) : Number of connected devices
- * 0x04FC : TOTAL_FD (b) : Number of floppy drives
- * 0x04FE : PRIMARY_GRAPH (b) : Slot of the primary graphics card
- * 0x04FD : PRIMARY_KEYB (b) : Slot of the primary keyboard
- * 0x0500 : DEVICES_TABLE : TOTAL_DEVICES entries of bytes (see Devices list)
- * 0x0408 : CURSOR_COL (b) : Column at were the screen cursor is placed
- * 0x0409 : CURSOR_ROW (b) : Row at were the screen cursor is placed
- * 0x0600 : SCREEN_BUFF : Text buffer used by graphics card
+ * 0x0400 : TOP_RAM_ADDR : Double word. Highest valid RAM address, and the size of the RAM
+ * 0x0404 : FIRM_INITIATED : Byte. Set to 0xFF if the firmware as finalized to initiated all basic stuff
+ * 0x0408 : CURSOR_COL : Byte. Column at were the screen cursor is placed
+ * 0x0409 : CURSOR_ROW : Byte. Row at were the screen cursor is placed
+ * 0x040C : HW_CURSOR_ADDR : Double word. Address of Hardware cursor position. Use to control the HW cursor on screen
+ * 0x04FC : TOTAL_FD : Byte. How many floppy drives there are.
+ * 0x04FD : PRIMARY_KEYB : Byte. Slot were is the primary keyboard.
+ * 0x04FE : PRIMARY_GRAPH : Byte. Slot were is the primary graphics card.
+ * 0x04FF : TOTAL_DEVICES : Byte. Number of devices.
+ * 0x0500 : DEVICES_TABLE : Device lists were each entry is a byte witdh, that indicates a slot with a device. Max size = 32 bytes, but we reserve 220 bytes -> 0x500 to 0x5DC
+ * 0x0600 - 0xF60 : SCREEN_BUFF : Were begins the screen buffer used by the firmware, ends at 0x0F60
 
 ## Devices list
 
