@@ -42,15 +42,17 @@ CRASH:        ; If something goes very wrong, here is crash point
     jmp CRASH ; If wakeups, try again to sleep
 
 ; Auxiliar subrutines
-  .include "aux_functions.asm"
+    .include "aux_functions.asm"
 
 ; Text buffer subrutines
-  .include "text_buffer.asm"
+    .include "text_buffer.asm"
 
-FIRMWARE_VERSION:
-    .db 0   ; Revision
-    .db 2   ; Minor
-    .db 0   ; Major
+    .struct version_struct
+rev     .db 0   ; Revision
+minor   .db 2   ; Minor
+major   .db 0   ; Major
+    .endstruct
+FIRMWARE_VERSION version_struct
 
 STR_RAM_OK:
     .db "RAM OK. Detected ",0
