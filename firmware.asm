@@ -9,6 +9,7 @@
     .include "constants.asm"
     .include "ram_vars.asm"
 
+    .org 0x100000             ; ROM begins at 0x100000
 ; Firmware entrypoint and initial quickcheck of RAM
     .include "init.asm"
     mov %r0, 0

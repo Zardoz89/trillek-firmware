@@ -8,28 +8,31 @@
 ;
 ; ------------------------------------------------------------------------------
 
-INT_VECTOR_TABLE: .equ 0x0
+    .org 0x0   ; Ram vars are emplaced at address 0 and forwards
+INT_VECTOR_TABLE: .reserve 256*4
     ; Each interrupt handler pointer takes 4 bytes
     ; So we reserve the first 1024 bytes for the vector table
 
-TOP_RAM_ADDR:     .equ 0x400  ; Top address of RAM (ie size) (dw 1024)
-FIRM_INITIATED:   .equ 0x404  ; Internal var. Must be 0xFF (b 1028)
+TOP_RAM_ADDR:     .dw 0       ; Top address of RAM (ie size) (dw 1024)
+FIRM_INITIATED:   .db 0       ; Internal var. Must be 0xFF (b 1028)
+TOTAL_FD:					.db 0       ; How many floppy drives there is (b 1276)
+PRIMARY_KEYB:     .db 0       ; Slot were is the primary keyboard (b 1277)
+PRIMARY_GRAPH:    .db 0       ; Slot were is the primary graphics card (b 1278)
+TOTAL_DEVICES:    .db 0       ; Number of devices (b 1279)
 
-TOTAL_FD:					.equ 0x4FC  ; How many floppy drives there is (b 1276)
-PRIMARY_KEYB:     .equ 0x4FD  ; Slot were is the primary keyboard (b 1277)
-PRIMARY_GRAPH:    .equ 0x4FE  ; Slot were is the primary graphics card (b 1278)
-TOTAL_DEVICES:    .equ 0x4FF  ; Number of devices (b 1279)
-
-DEVICES_TABLE:    .equ 0x500  ; Device lists were each entry is a byte with
+DEVICES_TABLE:    .reserve 220; Device lists were each entry is a byte with
 															; that indicates a slot with a device
                               ; Max size = 32 bytes
                               ; But we reserve 220 bytes -> 0x500 to 0x5DC
 															; (1280 to 1500)
 
-CURSOR_COL:       .equ 0x408  ; Cursor column (b 1032)
-CURSOR_ROW:       .equ 0x409  ; Cursor row    (b 1033)
-HW_CURSOR_ADDR:   .equ 0x40C  ; Address of Hardware cursor position (dw 1036)
-SCREEN_BUFF:      .equ 0x600  ; Were begins the screen buffer used by the
-                              ; firmware (1536), ends at 0xF60 (3936)
+CURSOR_COL:       .db 0       ; Cursor column (b 1032)
+CURSOR_ROW:       .db 0       ; Cursor row    (b 1033)
+HW_CURSOR_ADDR:   .dw 0       ; Address of Hardware cursor position (dw 1036)
 
+    .rorg 0x600
+                              ; iHere begins the screen buffer used by the
+                              ; firmware (1536), ends at 0xF60 (3936)
+SCREEN_BUFF:      .reserve TDA_TEXTBUFF_SIZE
+    .rend
 
