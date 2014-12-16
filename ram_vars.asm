@@ -8,30 +8,28 @@
 ;
 ; ------------------------------------------------------------------------------
 
-INT_VECTOR_TABLE: .EQU 0x0
+INT_VECTOR_TABLE: .equ 0x0
     ; Each interrupt handler pointer takes 4 bytes
     ; So we reserve the first 1024 bytes for the vector table
 
-TOP_RAM_ADDR:     .EQU 0x400  ; Top address of RAM (ie size) (dw 1024)
-FIRM_INITIATED:   .EQU 0x404  ; Internal var. Must be 0xFF (b 1028)
+TOP_RAM_ADDR:     .equ 0x400  ; Top address of RAM (ie size) (dw 1024)
+FIRM_INITIATED:   .equ 0x404  ; Internal var. Must be 0xFF (b 1028)
 
-TOTAL_FD:					.EQU 0x4FC  ; How many floppy drives there is (b 1276)
-PRIMARY_KEYB:     .EQU 0x4FD  ; Slot were is the primary keyboard (b 1277)
-PRIMARY_GRAPH:    .EQU 0x4FE  ; Slot were is the primary graphics card (b 1278)
-TOTAL_DEVICES:    .EQU 0x4FF  ; Number of devices (b 1279)
+TOTAL_FD:					.equ 0x4FC  ; How many floppy drives there is (b 1276)
+PRIMARY_KEYB:     .equ 0x4FD  ; Slot were is the primary keyboard (b 1277)
+PRIMARY_GRAPH:    .equ 0x4FE  ; Slot were is the primary graphics card (b 1278)
+TOTAL_DEVICES:    .equ 0x4FF  ; Number of devices (b 1279)
 
-DEVICES_TABLE:    .EQU 0x500  ; Device lists were each entry is a byte with
+DEVICES_TABLE:    .equ 0x500  ; Device lists were each entry is a byte with
 															; that indicates a slot with a device
                               ; Max size = 32 bytes
                               ; But we reserve 220 bytes -> 0x500 to 0x5DC
 															; (1280 to 1500)
 
-CURSOR_COL:       .EQU 0x408  ; Cursor column (b 1032)
-CURSOR_ROW:       .EQU 0x409  ; Cursor row    (b 1033)
-HW_CURSOR_ADDR:   .EQU 0x40C  ; Address of Hardware cursor position (dw 1036)
-SCREEN_BUFF:      .EQU 0x600  ; Were begins the screen buffer used by the
+CURSOR_COL:       .equ 0x408  ; Cursor column (b 1032)
+CURSOR_ROW:       .equ 0x409  ; Cursor row    (b 1033)
+HW_CURSOR_ADDR:   .equ 0x40C  ; Address of Hardware cursor position (dw 1036)
+SCREEN_BUFF:      .equ 0x600  ; Were begins the screen buffer used by the
                               ; firmware (1536), ends at 0xF60 (3936)
 
-
-; TODO Other vars..
 
