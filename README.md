@@ -36,6 +36,7 @@ Firmware for the Trillek computer v0.1.0
     - PUT_UHEX : Write a double word value on hexadecimal
     - PUT_UWHEX : Write a word value on hexadecimal
     - PUT_UBHEX : Write a byte value on hexadecimal
+  - [ ] Beep error codes
 
 ## RAM variables
 
