@@ -40,7 +40,7 @@ FD_BOOT_FOR:
 		; Read sector 0
 		MOV %r0, BOOT_SECTOR_ADDR				; Address were to dump the sector
 		STORE %r2, 0x0A, %r0						; Write to B:A register
-		MOV %r0, 0				              ; Sector 0
+		MOV %r0, 0x0001		              ; Sector 0 (CHS 0:0:1)
 		STOREW %r2, 0x0E, %r0						; Write to C register
 		MOV %r0, 0x00001								; Read Command
 		STOREW %r2, 0x08, %r0
