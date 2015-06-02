@@ -6,8 +6,8 @@
 ; ------------------------------------------------------------------------------
 
     .org 0x100000             ; ROM begins at 0x100000
-    .include "constants.asm"
-    .include "ram_vars.asm"
+    .include "constants.ainc"
+    .include "ram_vars.ainc"
 
     .org 0x100000             ; ROM begins at 0x100000
 ; Firmware entrypoint and initial quickcheck of RAM
