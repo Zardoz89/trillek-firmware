@@ -1,0 +1,44 @@
+; ------------------------------------------------------------------------------
+;
+; File : constants.asm
+; Contants related to the Computer architecture
+;
+; ------------------------------------------------------------------------------
+
+ROM_START         .equ 0x100000   ; Were begins the ROM
+BASE_ENUM_CTROL   .equ 0x110000   ; Were begins the Hard Enuem&Ctrol regs
+
+; Boot up sequence
+BOOT_SECTOR_ADDR  .equ 0x001400		; Were is dumped sector 0 on RAM
+BOOT_MAGIC_ADDR   .equ 0x0015FC	  ; Were is the bootable mark
+BOOT_MAGICNUMBER  .equ 0x32335254 ; Bootable mark 'TR32'
+
+; Embed devices addresses ------------------------------------------------------
+BEEPER_ADDR       .equ 0x11E020
+
+RNG_ADDR          .equ 0x11E040
+
+RTC_SEC_ADDR      .equ 0x11E030
+RTC_MIN_ADDR      .equ 0x11E031
+RTC_HOUR_ADDR     .equ 0x11E032
+RTC_DAY_ADDR      .equ 0x11E033
+RTC_MONTH_ADDR    .equ 0x11E034
+RTC_YEAR_ADDR     .equ 0x11E035   ; Word size
+
+TMR0_VAL_ADDR     .equ 0x11E000   ; Double word size
+TMR0_RELOAD_ADDR  .equ 0x11E004   ; Double word size
+TMR1_VAL_ADDR     .equ 0x11E008   ; Double word size
+TMR1_RELOAD_ADDR  .equ 0x11E00C   ; Double word size
+TMR_CFG_ADDR      .equ 0x11E010
+
+; Devices stuff ----------------------------------------------------------------
+; Dev types
+DEV_TYPE_COMMS    .equ 0x02       ; Comunication device
+DEV_TYPE_HID      .equ 0x03       ; Human interface device (keyb/joytsticks)
+DEV_TYPE_GRPH     .equ 0x0E       ; Graphics cards
+DEV_TYPE_MSTORAGE .equ 0x08       ; Masive Storage
+
+; TDA constants
+TDA_TEXTBUFF_SIZE .equ 0x960      ; TDA text buffer size
+
+

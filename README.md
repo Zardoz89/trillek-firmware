@@ -1,7 +1,7 @@
-Trillek firmware v0.1.0
+Trillek firmware v0.2.0
 =======================
 
-Firmware for the Trillek computer v0.1.0
+Firmware for the Trillek computer v0.2.0
 
 ## What does / TODO list
 
@@ -86,8 +86,8 @@ The monitor is a clone of Wozniak's code monitor of Apple I and ]\[ . With it is
 
 ## Build it
 
-Actually this firmware uses [Meisaka's WaveAsm](https://github.com/Meisaka/WaveAsm)
-You need to copy (or link) **WaveAsm.pl** and **tr3200.isf** to the root of this project and run ```make``` . It will generate  a **firmware.ffi** that is a binary blob ready to be used as ROM for the Trillek computer.
+Actually this firmware uses [Trillek icomputer Toolkit](https://github.com/trillek-team/computer-toolkit)
+You need to build vasm with TR3200 backend and oldstyle syntax module (use build_vasm.sh from computer toolkit) to generate vasmtr3200.
 
 
 
