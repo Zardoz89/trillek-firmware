@@ -44,3 +44,4 @@ SEARCH_KEYB_WHILE_LOOP:
 ; 2) Initialize the primary keyboard (not need at this moment)
 INIT_PRIMARY_KEYB:
 
+; vim: set filetype=asmtr32 :

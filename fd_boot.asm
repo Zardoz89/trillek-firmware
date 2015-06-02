@@ -85,3 +85,4 @@ FD_BOOT_END:
     mov %r1, 30
     call PUTS												; Print
 
+; vim: set filetype=asmtr32 :

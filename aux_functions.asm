@@ -26,3 +26,4 @@ DW_MEMSET_WHILE_LOOP:       ; while (%r3 < %r2)
 DW_MEMSET_END:
     ret
 
+; vim: set filetype=asmtr32 :

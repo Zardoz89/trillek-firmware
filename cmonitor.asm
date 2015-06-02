@@ -364,3 +364,4 @@ MONITOR_PRINT_ADDR:
     pop %r0
     ret
 
+; vim: set filetype=asmtr32 :

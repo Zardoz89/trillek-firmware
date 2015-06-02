@@ -114,3 +114,4 @@ INFO_FLOPPY_FOR_NEXT:
     and %r0, %r0, 0xFF00        ; Jumps to the next row
     storew CURSOR_COL, %r0
 
+; vim: set filetype=asmtr32 :

@@ -71,3 +71,4 @@ INIT_PRIMARY_GRAPH:
 
 END_INIT_PRIMARY_GRAPH:
 
+; vim: set filetype=asmtr32 :

@@ -42,3 +42,4 @@ DEV_TYPE_MSTORAGE .equ 0x08       ; Masive Storage
 TDA_TEXTBUFF_SIZE .equ 0x960      ; TDA text buffer size
 
 
+; vim: set filetype=asmtr32 :

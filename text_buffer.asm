@@ -181,3 +181,4 @@ SYNC_HW_CURSOR:
     pop %r5
     ret
 
+; vim: set filetype=asmtr32 :

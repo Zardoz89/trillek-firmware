@@ -27,3 +27,4 @@ HWM_WHILE_LOOP:                     ; while (++i < 32)
 
     storeb TOTAL_DEVICES, %r0       ; Stores the total number of devices
 
+; vim: set filetype=asmtr32 :

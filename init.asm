@@ -46,3 +46,4 @@ ERROR_RAM:                ; RAM is broken
 
 RAM_OK:                   ; Firmware next step
 
+; vim: set filetype=asmtr32 :

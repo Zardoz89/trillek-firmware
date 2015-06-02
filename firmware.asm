@@ -74,3 +74,5 @@ STR_NO_MEDIA:
     .db "Floppy drive not have a floppy",0
 STR_BOOTING:
     .db "Trying to boot from FD",0
+
+; vim: set filetype=asmtr32 :

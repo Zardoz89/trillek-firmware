@@ -19,3 +19,5 @@ STR_HELLO:  .db "Hello world!",0
 
     .org 0x15FC             ; 0x1400 + 512 - 4
     .db "TR32"              ; Boot mark
+
+; vim: set filetype=asmtr32 :

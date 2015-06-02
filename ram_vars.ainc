@@ -41,3 +41,4 @@ SCREEN_BUFF:      .EQU 0x600  ; Were begins the screen buffer used by the
 ; TODO Other vars..
 
 
+; vim: set filetype=asmtr32 :
