@@ -1,7 +1,7 @@
-ASM := vasmtr3200
+ASM := vasm-tr3200
 RM := rm
 
-SOURCEFILES := ${wildcard *.asm}
+SOURCEFILES := ${wildcard *.asm} ${wildcard *.ainc}
 OBJECTFILE := firmware.ffi
 ASMFLAGS := -dotdir
 
