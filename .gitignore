@@ -1,9 +1,11 @@
 #  Object Files
-*.obj
-*.ffi
+*.o
+*.bin
 
 # List Files
 *.lst
+# Map Files
+*.map
 
 # vim/kate/nano backup files
 *.swp

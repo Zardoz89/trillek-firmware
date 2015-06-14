@@ -5,7 +5,11 @@
 ; Misc subrutines to
 ;
 ; ------------------------------------------------------------------------------
+    section .text
+    .global DW_MEMSET
 
+    .include "constants.ainc"
+    .include "ram_vars.ainc"
 ; DW_MEMSET fills a RAM region with double words
 ;   %r0 Pointer to were write
 ;   %r1 Fill DWord

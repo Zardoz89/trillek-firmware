@@ -4,13 +4,14 @@
 ; Trillek firmware   v 0.2.0
 ;
 ; ------------------------------------------------------------------------------
+    section .text
+    .global _ROOM_INIT
 
-    .org 0x100000             ; ROM begins at 0x100000
     .include "constants.ainc"
     .include "ram_vars.ainc"
 
-    .org 0x100000             ; ROM begins at 0x100000
 ; Firmware entrypoint and initial quickcheck of RAM
+_ROOM_INIT:
     .include "init.asm"
     mov %r0, 0
     storeb FIRM_INITIATED, %r0
@@ -42,10 +43,10 @@ CRASH:        ; If something goes very wrong, here is crash point
     jmp CRASH ; If wakeups, try again to sleep
 
 ; Auxiliar subrutines
-    .include "aux_functions.asm"
+;    .include "aux_functions.asm"
 
 ; Text buffer subrutines
-    .include "text_buffer.asm"
+;    .include "text_buffer.asm"
 
     .struct version_struct
 rev     .db 0   ; Revision

@@ -6,8 +6,18 @@
 ; color/character pair
 ;
 ; ------------------------------------------------------------------------------
+    section .text
+    .global PUTS
+    .global PUTC
+    .global PUT_UDEC
+    .global PUT_UHEX
+    .global PUT_UWHEX
+    .global PUT_UBHEX
+    .global SYNC_HW_CURSOR
 
 
+    .include "constants.ainc"
+    .include "ram_vars.ainc"
 ; Puts a null terminated string on the screen buffer and increases cursor position
 ;   %r0 Ptr to string (not preserved)
 ;   %r1 String max lenght (not preserved)
