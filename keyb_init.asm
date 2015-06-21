@@ -22,11 +22,11 @@ SEARCH_KEYB_DOLOOP:
 
 		loadb %r3, %r2, 1								; Reads type
     ifneq %r3, DEV_TYPE_HID
-      jmp SEARCH_KEYB_WHILE_LOOP    ; Skips to the next iteration
+      rjmp SEARCH_KEYB_WHILE_LOOP   ; Skips to the next iteration
 
 		loadb %r3, %r2, 2								; Reads subtype
     ifneq %r3, 0x01                 ; If not is an Western/Latin Keyboard
-      jmp SEARCH_KEYB_WHILE_LOOP    ; Skips to the next iteration
+      rjmp SEARCH_KEYB_WHILE_LOOP   ; Skips to the next iteration
 
     storeb PRIMARY_KEYB, %r1				; We save the device slot
     jmp INIT_PRIMARY_KEYB
@@ -34,7 +34,7 @@ SEARCH_KEYB_DOLOOP:
 SEARCH_KEYB_WHILE_LOOP:
     add %r0, %r0, 2
     ifl %r0, %r10                   ; while (%r0 < $r10)
-      jmp SEARCH_KEYB_DOLOOP
+      rjmp SEARCH_KEYB_DOLOOP
 
 ;   TODO Beep sequence to indicate that there is no a graphics card
 ;    LOADB %r0, PRIMARY_KEYB

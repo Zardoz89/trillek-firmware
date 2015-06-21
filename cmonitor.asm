@@ -60,7 +60,7 @@ MONITOR_GETCHAR:
 MONITOR_GETCHAR_WAITLOOP:       ; Busy loop to wait a key
     loadw %r1, %r0, 0x12
     ifeq %r1, 0
-      jmp MONITOR_GETCHAR_WAITLOOP  ; No key
+      rjmp MONITOR_GETCHAR_WAITLOOP  ; No key
 
     mov %r1, 0x0001             ; POP-KEY command
     storew %r0, 0x08, %r1
@@ -70,33 +70,33 @@ MONITOR_GETCHAR_WAITLOOP:       ; Busy loop to wait a key
 ; Process input from %r2, putting on the buffer and displaying it
 MONITOR_PROCESS_INPUT:
     ifeq %r2, CR                ; Enter key
-      jmp MONITOR_PARSE
+      rjmp MONITOR_PARSE
     ifeq %r2, DEL               ; Delete
-      jmp MONITOR_DEL
+      rjmp MONITOR_DEL
 
     ifge %r2, 'a'               ; hex
       ifle %r2, 'f'
-        jmp MONITOR_PUTBUFFER
+        rjmp MONITOR_PUTBUFFER
     ifge %r2, 'A'
       ifle %r2, 'F'
-        jmp MONITOR_PUTBUFFER
+        rjmp MONITOR_PUTBUFFER
     ifge %r2, '0'
       ifle %r2, '9'
-        jmp MONITOR_PUTBUFFER
+        rjmp MONITOR_PUTBUFFER
 
     ifeq %r2, ' '               ; Separator
-      jmp MONITOR_PUTBUFFER
+      rjmp MONITOR_PUTBUFFER
     ifeq %r2, '.'               ; List block
-      jmp MONITOR_PUTBUFFER
+      rjmp MONITOR_PUTBUFFER
     ifeq %r2, ':'               ; Put data
-      jmp MONITOR_PUTBUFFER
+      rjmp MONITOR_PUTBUFFER
 
     ifeq %r2, 'r'               ; Run command
-      jmp MONITOR_PUTBUFFER
+      rjmp MONITOR_PUTBUFFER
     ifeq %r2, 'R'
-      jmp MONITOR_PUTBUFFER
+      rjmp MONITOR_PUTBUFFER
 
-    jmp MONITOR_GETCHAR_WAITLOOP  ; Unknow, or not an actual command
+    rjmp MONITOR_GETCHAR_WAITLOOP  ; Unknow, or not an actual command
 
 MONITOR_PUTBUFFER:
     loadb %r0, MBUFFER_COUNT    ; Get buffer size
@@ -107,12 +107,12 @@ MONITOR_PUTBUFFER:
     call PUTC
     call SYNC_HW_CURSOR
 
-    jmp MONITOR_GETCHAR
+    rjmp MONITOR_GETCHAR
 
 MONITOR_DEL:
     loadb %r0, MBUFFER_COUNT    ; Get buffer size
     ifeq %r0, 0
-      jmp MONITOR_GETCHAR       ; Nothing to delete
+      rjmp MONITOR_GETCHAR       ; Nothing to delete
 
     sub %r0, %r0, 1
     storeb MBUFFER_COUNT, %r0   ; Update buffer lenght
@@ -120,7 +120,7 @@ MONITOR_DEL:
     call PUTC
     call SYNC_HW_CURSOR
 
-    jmp MONITOR_GETCHAR
+    rjmp MONITOR_GETCHAR
 
 ; Parsing of the buffer
 MONITOR_PARSE:
@@ -138,37 +138,37 @@ MONITOR_PARSE:
 
 MONITOR_PARSE_FORLOOP:
     ifge %r9, %r10
-      jmp MONITOR_PARSE_END
+      rjmp MONITOR_PARSE_END
 
     loadb %r0, %r9, MBUFFER     ; Load on %r0, buffer[index]
     ifeq %r0, 'R'
-      jmp MONITOR_RUN
+      rjmp MONITOR_RUN
     ifeq %r0, 'r'
-      jmp MONITOR_RUN
+      rjmp MONITOR_RUN
 
     ifeq %r0, ' '
       ifeq %r8, MODE_EXAM
-        jmp MONITOR_NEW_LADDR
+        rjmp MONITOR_NEW_LADDR
 
     ifeq %r0, ' '
       ifeq %r8, MODE_STORE
-        jmp MONITOR_WRITEVAL
+        rjmp MONITOR_WRITEVAL
 
     ifeq %r0, '.'
       ifeq %r8, MODE_EXAM        ; Only if is in Examination mode
-        jmp MONITOR_CHMODE_BEXAM  ; Changes to block examine mode
+        rjmp MONITOR_CHMODE_BEXAM  ; Changes to block examine mode
 
     ifeq %r0, ':'
       ifeq %r8, MODE_EXAM        ; Only if is in Examination mode
-        jmp MONITOR_CHMODE_STORE  ; Changes to store mode
+        rjmp MONITOR_CHMODE_STORE  ; Changes to store mode
 
     ifle %r0, '9'               ; 0 to 9
-      jmp MONITOR_VAL_HDIGIT
+      rjmp MONITOR_VAL_HDIGIT
 
     ifle %r0, 'F'               ; A to F
-      jmp MONITOR_VAL_HULETTER
+      rjmp MONITOR_VAL_HULETTER
     ifle %r0, 'f'               ; a to f
-      jmp MONITOR_VAL_HLLETTER
+      rjmp MONITOR_VAL_HLLETTER
 
 MONITOR_PARSE_FORNEXT:
     add %r9, %r9, 1
@@ -181,10 +181,10 @@ MONITOR_PARSE_END:
         store LADDRESS, %r7       ; Updates last address
 
     ifeq %r8, MODE_BEXAM          ; Block examine mode
-      jmp MONITOR_PARSE_END_BEXAM
+      rjmp MONITOR_PARSE_END_BEXAM
 
     ifeq %r8, MODE_STORE          ; Store mode
-      jmp MONITOR_PARSE_END_STORE
+      rjmp MONITOR_PARSE_END_STORE
 
 MONITOR_PARSE_END_EXAM:
     ; Print value at last address always
@@ -203,24 +203,24 @@ MONITOR_PARSE_REAL_END:
     mov %r0, 0
     storeb MBUFFER_COUNT, %r0   ; Cleans the buffer lenght
 
-    jmp MONITOR_PROMPT
+    rjmp MONITOR_PROMPT
 
 ; Stuff to do at the end of parsing when is in block examine mode
 MONITOR_PARSE_END_BEXAM:
     load %r0, LADDRESS
     ifg %r0, %r7                ; Invalid end address, display only LADDRESS
-      jmp MONITOR_PARSE_END_EXAM
+      rjmp MONITOR_PARSE_END_EXAM
 
     call MONITOR_PRINT_ADDR     ; Print address
 
     mov %r10, 0                 ; %r2 as counter to print regular address
 MONITOR_PARSE_BEXAM_FORLOOP:
     ifge %r0, %r7               ; for (;%r0 < %r7; %r0++)
-      jmp MONITOR_PARSE_BEXAM_FOREND
+      rjmp MONITOR_PARSE_BEXAM_FOREND
 
     ; every 8 values, jump to a new line and print address
     ifneq %r10, 8
-      jmp MONITOR_PARSE_BEXAM_PRINTVAL
+      rjmp MONITOR_PARSE_BEXAM_PRINTVAL
 
     mov %r10, 0
     mov %r2, LF                 ; Jumps to the next line
@@ -240,16 +240,16 @@ MONITOR_PARSE_BEXAM_PRINTVAL:
 MONITOR_PARSE_BEXAM_FORNEXT:
     add %r0, %r0, 1
     add %r10, %r10, 1
-    jmp MONITOR_PARSE_BEXAM_FORLOOP
+    rjmp MONITOR_PARSE_BEXAM_FORLOOP
 
 MONITOR_PARSE_BEXAM_FOREND:
 
-    jmp MONITOR_PARSE_REAL_END
+    rjmp MONITOR_PARSE_REAL_END
 
 ; Stuff to do at the end of parsing when is on store mode
 MONITOR_PARSE_END_STORE:
     ifeq %r0, ' '
-      jmp MONITOR_PARSE_REAL_END  ; We wrote the last value
+      rjmp MONITOR_PARSE_REAL_END  ; We wrote the last value
 
     load %r0, LADDRESS
     loadb %r1, WRITE_IND
@@ -258,7 +258,7 @@ MONITOR_PARSE_END_STORE:
     add %r1, %r1, 1
     storeb WRITE_IND, %r1     ; And increases WRITE_IND
 
-    jmp MONITOR_PARSE_REAL_END
+    rjmp MONITOR_PARSE_REAL_END
 
 ; Execute code pointed at last address
 MONITOR_RUN:
@@ -273,7 +273,7 @@ MONITOR_RUN:
     mov %r0, CURSOR
     storew %r6, -2, %r0
 
-    jmp MONITOR_PARSE_END
+    rjmp MONITOR_PARSE_END
 
 ; Changes to Block EXAMine mode
 MONITOR_CHMODE_BEXAM:
@@ -283,7 +283,7 @@ MONITOR_CHMODE_BEXAM:
     mov %r8, MODE_BEXAM
     mov %r7, 0                  ; Resets temporal value
 
-    jmp MONITOR_PARSE_FORNEXT
+    rjmp MONITOR_PARSE_FORNEXT
 
 ; Changes to STORE mode
 MONITOR_CHMODE_STORE:
@@ -294,7 +294,7 @@ MONITOR_CHMODE_STORE:
     mov %r7, 0                  ; Resets temporal value
     storeb WRITE_IND, %r7       ; Sets write index to 0
 
-    jmp MONITOR_PARSE_FORNEXT
+    rjmp MONITOR_PARSE_FORNEXT
 
 ; Changes last address and print it
 MONITOR_NEW_LADDR:
@@ -325,7 +325,7 @@ MONITOR_WRITEVAL
 
     mov %r7, 0                ; Reset temporal
 
-    jmp MONITOR_PARSE_FORNEXT
+    rjmp MONITOR_PARSE_FORNEXT
 
 ; Shift to the left value and add (0-9)
 MONITOR_VAL_HDIGIT:
@@ -333,7 +333,7 @@ MONITOR_VAL_HDIGIT:
     sub %r0, %r0, '0'
     and %r0, %r0, 0x0F        ; Sanization
     or %r7, %r7, %r0
-    jmp MONITOR_PARSE_FORNEXT
+    rjmp MONITOR_PARSE_FORNEXT
 
 ; Shift to the left value and add (A-F) uppercase
 MONITOR_VAL_HULETTER:
@@ -341,7 +341,7 @@ MONITOR_VAL_HULETTER:
     sub %r0, %r0, 0x37        ; ('A' - 0x0A)
     and %r0, %r0, 0x0F        ; Sanization
     or %r7, %r7, %r0
-    jmp MONITOR_PARSE_FORNEXT
+    rjmp MONITOR_PARSE_FORNEXT
 
 ; Shift to the left value and add (A-F) lowercase
 MONITOR_VAL_HLLETTER:
@@ -349,7 +349,7 @@ MONITOR_VAL_HLLETTER:
     sub %r0, %r0, 0x57        ; ('a' - 0x0A)
     and %r0, %r0, 0x0F        ; Sanization
     or %r7, %r7, %r0
-    jmp MONITOR_PARSE_FORNEXT
+    rjmp MONITOR_PARSE_FORNEXT
 
 ; Subrutine that print and addres on %r0
 MONITOR_PRINT_ADDR:

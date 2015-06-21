@@ -9,7 +9,7 @@
 
     loadb %r3, PRIMARY_GRAPH
     ifeq %r1, 0xFF
-      jmp SKIP_PRINT            ; No screen, no print
+      rjmp SKIP_PRINT            ; No screen, no print
 
     ; Print total RAM
     mov %r0, STR_RAM_OK
@@ -49,7 +49,7 @@
 
     loadb %r3, PRIMARY_KEYB
     ifeq %r1, 0xFF
-      jmp SKIP_PRINT
+      rjmp SKIP_PRINT
     ; Print "Keyboard at slot : X"
     mov %r0, STR_KEYBOARD_CARD_AT
     mov %r1, 21
@@ -79,11 +79,11 @@ INFO_FLOPPY_FOR:
 
 		loadb %r3, %r2, 1								; Reads type
     ifneq %r3, DEV_TYPE_MSTORAGE
-      jmp INFO_FLOPPY_FOR_NEXT      ; Skips to the next iteration
+      rjmp INFO_FLOPPY_FOR_NEXT     ; Skips to the next iteration
 
 		loadb %r3, %r2, 2								; Reads subtype
     ifneq %r3, 0x01                 ; If not is a 5.25 Floppy drive
-      jmp INFO_FLOPPY_FOR_NEXT      ; Skips to the next iteration
+      rjmp INFO_FLOPPY_FOR_NEXT     ; Skips to the next iteration
 
 		push %r0
 		push %r1
@@ -105,13 +105,13 @@ INFO_FLOPPY_FOR_NEXT:
     add %r10, %r10, 1
 		loadb %r8, TOTAL_DEVICES				; How many items ?
     ifl %r10, %r8
-      jmp INFO_FLOPPY_FOR           ; for (%r10=0; %r10 < total_devices; %r10++)
+      rjmp INFO_FLOPPY_FOR          ; for (%r10=0; %r10 < total_devices; %r10++)
 
 		storeb TOTAL_FD, %r9						; Stores how many floppy drives there are
 
     loadw %r0, CURSOR_COL
     add %r0, %r0, 0x0100
-    and %r0, %r0, 0xFF00        ; Jumps to the next row
+    and %r0, %r0, 0xFF00            ; Jumps to the next row
     storew CURSOR_COL, %r0
 
 ; vim: set filetype=asmtr32 :

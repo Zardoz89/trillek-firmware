@@ -40,7 +40,7 @@ _ROOM_INIT:
 ; Never should reach this
 CRASH:        ; If something goes very wrong, here is crash point
     sleep
-    jmp CRASH ; If wakeups, try again to sleep
+    rjmp CRASH ; If wakeups, try again to sleep
 
 ; Auxiliar subrutines
 ;    .include "aux_functions.asm"

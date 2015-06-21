@@ -22,19 +22,19 @@ SEARCH_GRPH_DOLOOP:
 
 		loadb %r3, %r2, 1								; Reads type
     ifneq %r3, DEV_TYPE_GRPH
-      jmp SEARCH_GRPH_WHILE_LOOP    ; Skips to the next iteration
+      rjmp SEARCH_GRPH_WHILE_LOOP   ; Skips to the next iteration
 
 		loadb %r3, %r2, 2								; Reads subtype
     ifneq %r3, 0x1                  ; If not is TDA compatible
-      jmp SEARCH_GRPH_WHILE_LOOP    ; Skips to the next iteration
+      rjmp SEARCH_GRPH_WHILE_LOOP   ; Skips to the next iteration
 
     storeb PRIMARY_GRAPH , %r1      ; We save the device slot
-    jmp INIT_PRIMARY_GRAPH					; break;
+    rjmp INIT_PRIMARY_GRAPH					; break;
 
 SEARCH_GRPH_WHILE_LOOP:
     add %r0, %r0, 1
     ifl %r0, %r10                   ; while (%r0 < %r10)
-      jmp SEARCH_GRPH_DOLOOP
+      rjmp SEARCH_GRPH_DOLOOP
 
 ;   TODO Beep sequence to indicate that there is no a graphics card
 ;    LOADB %r0, PRIMARY_GRAPH
@@ -45,7 +45,7 @@ SEARCH_GRPH_WHILE_LOOP:
 INIT_PRIMARY_GRAPH:
     loadb %r0, PRIMARY_GRAPH
     ifeq %r0, 0xFF                  ; There isn't a card to init
-      jmp END_INIT_PRIMARY_GRAPH
+      rjmp END_INIT_PRIMARY_GRAPH
 
     lls %r0, %r0, 8
     add %r0, %r0, BASE_ENUM_CTROL

@@ -18,10 +18,10 @@ QRC_DOLOOP1:
     store %r1, %r0        ; Writes test pattern at %r1
     load %r2, %r1         ; Read from %r1
     ifneq %r0, %r2        ; If %r2 != %r0 something is very wrong at this stage
-      jmp ERROR_RAM
+      rjmp ERROR_RAM
     add %r1, %r1, 4       ; Increments counter
     ifl %r1, RAM_HARDCHECK ; while %r1 < RAM_HARDCHECK
-      jmp QRC_DOLOOP1
+      rjmp QRC_DOLOOP1
     ; From here, we can assume that there is at least 8 KiB of RAM
 
     mov %r0, 0xAA         ; New test pattern
@@ -31,14 +31,14 @@ QRC_DOLOOP2:
     storeb %r1, %r0       ; Writes test pattern at %r1
     loadb %r2, %r1        ; Read from %r1
     ifeq %r0, %r2         ; while %r2 == %r0
-      jmp QRC_DOLOOP2
+      rjmp QRC_DOLOOP2
 
     ; TODO Do a fine check of the last RAM_STEP bytes
 
     ;sub %r1, %r1, RAM_STEP  ; %r1 points now to the hights valid ram address
     store TOP_RAM_ADDR, %r1 ; Store on ram were is the top valid address
     mov %sp , %r1          ; Setstack at the highest valid ram address
-    jmp RAM_OK
+    rjmp RAM_OK
 
 ERROR_RAM:                ; RAM is broken
     ; TODO Do a beep squence to indicate bad RAM

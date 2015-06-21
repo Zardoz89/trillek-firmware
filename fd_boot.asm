@@ -12,9 +12,9 @@
 		mov %r9, 0											; fd index
 FD_BOOT_FOR:
 		ifle %r10, %r9									; for (r9=0, r8=0;
-			jmp FD_BOOT_END								;      r9 < r10 && r8 < Devs ; r10++ )
+			rjmp FD_BOOT_END							;      r9 < r10 && r8 < Devs ; r10++ )
 		ifle %r7, %r8
-			jmp FD_BOOT_END
+			rjmp FD_BOOT_END
 
     loadb %r1, %r8, DEVICES_TABLE
 
@@ -23,11 +23,11 @@ FD_BOOT_FOR:
 
 		loadb %r3, %r2, 1								; Reads type
     ifneq %r3, DEV_TYPE_MSTORAGE
-      jmp FD_BOOT_FOR_NEXT					; Skips to the next iteration
+      rjmp FD_BOOT_FOR_NEXT					; Skips to the next iteration
 
 		loadb %r3, %r2, 2								; Reads subtype
     ifneq %r3, 0x01                 ; If not is a 5.25 Floppy drive
-      jmp FD_BOOT_FOR_NEXT					; Skips to the next iteration
+      rjmp FD_BOOT_FOR_NEXT					; Skips to the next iteration
 
 		; Here we check if there is a media on the floppy drive
 		mov %r0, 0x0003									; Query media command
@@ -35,7 +35,7 @@ FD_BOOT_FOR:
 
 		loadw %r0, %r2, 0x10						; Read status code
 		ifeq %r0, 0x0000								; If not media, skips
-			jmp FD_BOOT_FOR_NOMEDIA
+			rjmp FD_BOOT_FOR_NOMEDIA
 
 		; Read sector 0
 		mov %r0, BOOT_SECTOR_ADDR				; Address were to dump the sector
@@ -48,11 +48,11 @@ FD_BOOT_FOR:
 FD_BOOT_WAIT_READ:
 		loadw %r0, %r2, 0x10						; Read status code
 		ifeq %r0, 0x0003								; Wait to the end of operation
-			jmp FD_BOOT_WAIT_READ
+			rjmp FD_BOOT_WAIT_READ
 
 		load %r0, BOOT_MAGIC_ADDR				; Reads the boot mark
 		ifneq %r0, BOOT_MAGICNUMBER			; Compare agains the magic number
-			jmp FD_BOOT_FOR_CANT_BOOT
+			rjmp FD_BOOT_FOR_CANT_BOOT
 
 		; Print that is booting from FDx
     mov %r0, STR_BOOTING
@@ -68,7 +68,7 @@ FD_BOOT_FOR_CANT_BOOT
 
 FD_BOOT_FOR_NEXT:
     add %r8, %r8, 1
-    jmp FD_BOOT_FOR									; next %r9
+    rjmp FD_BOOT_FOR									; next %r9
 
 FD_BOOT_FOR_NOMEDIA
 		add %r9, %r9, 1
@@ -77,7 +77,7 @@ FD_BOOT_FOR_NOMEDIA
     mov %r1, 30
     call PUTS
 
-    jmp FD_BOOT_FOR_NEXT
+    rjmp FD_BOOT_FOR_NEXT
 
 FD_BOOT_END:
 		; Print that can't boot from media
